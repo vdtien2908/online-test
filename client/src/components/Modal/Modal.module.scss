@@ -1,0 +1,62 @@
+.wrapper {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+}
+
+.content {
+    position: absolute;
+    max-height: 90vh;
+    overflow-y: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    opacity: 0;
+    visibility: hidden;
+    background-color: #fff;
+    z-index: 95;
+    border-radius: 4px;
+    padding: 10px;
+    animation: appears_from_the_bottom_up 0.5s forwards;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background-color: #000;
+    opacity: 0.3;
+    z-index: 90;
+}
+
+.title {
+    text-align: center;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.close_btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+
+    svg {
+        font-size: 22px;
+        color: rgba(0, 0, 0, 0.6);
+    }
+}
+
+@keyframes appears_from_the_bottom_up {
+    from {
+        opacity: 0;
+        visibility: hidden;
+        transform: translate(-50%, -40%);
+    }
+    to {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(-50%, -50%);
+    }
+}

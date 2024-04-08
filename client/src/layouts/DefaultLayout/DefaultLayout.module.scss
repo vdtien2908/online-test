@@ -1,0 +1,20 @@
+.container {
+    padding-top: var(--default-layout-header-height);
+    display: flex;
+}
+
+.rightContainer {
+    width: 100%;
+}
+
+.content {
+    margin: 16px 16px 16px calc(var(--default-layout-sidebar-width) + 16px);
+    background-color: #fff;
+    min-height: calc(100vh - 88px);
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+
+    &.active {
+        margin: 16px 16px 16px calc(124.7px + 16px);
+    }
+}

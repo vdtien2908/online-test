@@ -1,0 +1,116 @@
+.header {
+    height: var(--default-layout-header-height);
+    background-color: var(--while);
+    border-bottom: 1px solid #e8e9ed;
+    padding: 0 30px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 89;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.headerLogo {
+    width: calc(var(--default-layout-sidebar-width) - 30px);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin-left: 16px;
+    font-size: 24px;
+    font-weight: 700;
+    padding-left: 30px;
+
+    a {
+        color: var(--primary);
+        // text-transform: uppercase;
+        letter-spacing: 0.2px;
+    }
+}
+
+.toggleSidebar {
+    cursor: pointer;
+    user-select: none;
+    padding: 10px;
+    color: #99abb4;
+    transition: all 0.3s ease;
+
+    &:hover {
+        color: var(--primary);
+    }
+}
+
+.headerRight {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+
+    span {
+        line-height: 0;
+        font-size: 14px;
+    }
+
+    span,
+    p {
+        transition: all 0.3s ease;
+        color: #99abb4;
+    }
+}
+
+.menu_user {
+    background-color: #fff;
+    box-shadow: var(--shadow);
+    padding: 10px;
+    border-radius: 6px;
+
+    li {
+        list-style: none;
+        font-size: 14px;
+        padding: 4px 0;
+        cursor: pointer;
+
+        a {
+            text-decoration: none;
+            color: #99abb4;
+            display: flex;
+            align-items: center;
+            gap: 0 6px;
+            transition: all 0.3s ease;
+            padding: 2px 0;
+
+            svg {
+                font-size: 14px;
+            }
+
+            &:hover {
+                color: var(--primary);
+            }
+        }
+
+        &:last-child {
+            border-top: 1px solid #eee;
+        }
+    }
+}
+
+.avatar_img {
+    width: 32px;
+    height: auto;
+    border-radius: 50%;
+}
