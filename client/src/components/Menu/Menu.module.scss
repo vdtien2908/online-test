@@ -1,0 +1,31 @@
+.menu {
+    background-color: #fff;
+    box-shadow: var(--shadow);
+    padding: 10px;
+    border-radius: 6px;
+
+    li {
+        list-style: none;
+        font-size: 14px;
+        padding: 4px 0;
+        cursor: pointer;
+
+        a {
+            text-decoration: none;
+            color: #99abb4;
+            display: flex;
+            align-items: center;
+            gap: 0 6px;
+            transition: all 0.3s ease;
+            padding: 2px 0;
+
+            svg {
+                font-size: 14px;
+            }
+
+            &:hover {
+                color: var(--primary);
+            }
+        }
+    }
+}

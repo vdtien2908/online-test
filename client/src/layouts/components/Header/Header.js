@@ -7,8 +7,6 @@ import {
     FaSignInAlt,
 } from 'react-icons/fa';
 import clsx from 'clsx';
-import Tippy from '@tippyjs/react/headless'; // different import path!
-import 'tippy.js/dist/tippy.css'; // optional
 
 // Style css
 import style from './Header.module.scss';
@@ -16,8 +14,26 @@ import style from './Header.module.scss';
 // Component
 import Tooltip from '~/components/Tooltip';
 import Image from '~/components/Image';
+import Menu from '~/components/Menu';
 
 function Header({ onClick }) {
+    const MENU_ITEMS = [
+        {
+            icon: <FaCogs />,
+            title: 'Thông tin tài khoản',
+            to: '/demo',
+        },
+        {
+            icon: <FaKey />,
+            title: 'Đổi mật khẩu',
+            to: '/demo',
+        },
+        {
+            icon: <FaSignInAlt />,
+            title: 'Đăng xuất',
+            to: '/demo',
+        },
+    ];
     return (
         <div className={clsx(style.header)}>
             <div className={clsx(style.headerLeft)}>
@@ -31,7 +47,7 @@ function Header({ onClick }) {
                 {/* /Logo */}
 
                 {/* Toggle sidebar button */}
-                <Tooltip content="Thu gọn thanh menu">
+                <Tooltip content="Thu gọn">
                     <span
                         onClick={onClick}
                         className={clsx(style.toggleSidebar)}
@@ -42,34 +58,7 @@ function Header({ onClick }) {
                 {/* /Toggle sidebar button */}
             </div>
             <div className={clsx(style.headerRight)}>
-                <Tippy
-                    interactive
-                    tabIndex="-1"
-                    render={(attrs) => (
-                        <div className={style.menu_user}>
-                            <ul>
-                                <li>
-                                    <Link>
-                                        <FaCogs />
-                                        <span>Thông tin tài khoản</span>
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link>
-                                        <FaKey />
-                                        <span>Đổi mật khẩu</span>
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link>
-                                        <FaSignInAlt />
-                                        <span>Đăng xuất</span>
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-                    )}
-                >
+                <Menu items={MENU_ITEMS}>
                     <div className={clsx(style.avatar)}>
                         <Image
                             src="abc"
@@ -81,7 +70,7 @@ function Header({ onClick }) {
                             <FaEllipsisV />
                         </span>
                     </div>
-                </Tippy>
+                </Menu>
             </div>
             {/* /Bars */}
         </div>

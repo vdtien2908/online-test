@@ -25,7 +25,7 @@ const dataSidebar = [
     },
     {
         title: 'Lớp học phần',
-        path: config.routes.group.index,
+        path: config.routes.class.index,
         icon: <BiDetail />,
         tag: 'Học phần',
     },

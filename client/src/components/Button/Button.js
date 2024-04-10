@@ -15,6 +15,8 @@ function Button({
     destroy,
     onClick,
     children,
+    leftIcon,
+    rightIcon,
     ...passProps
 }) {
     let Comp = 'button';
@@ -42,7 +44,9 @@ function Button({
 
     return (
         <Comp className={classes} {..._props}>
+            {leftIcon && <span className={clsx(style.icon)}>{leftIcon}</span>}
             <span>{children}</span>
+            {rightIcon && <span className={clsx(style.icon)}>{rightIcon}</span>}
         </Comp>
     );
 }

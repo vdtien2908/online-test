@@ -1,7 +1,7 @@
 const routes = {
     dashboard: { index: '/' },
-    group: {
-        index: '/group',
+    class: {
+        index: '/class',
         add: 'create',
         update: 'update/:id',
         delete: 'delete/:id',

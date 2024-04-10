@@ -1,6 +1,6 @@
 // Page
 import Dashboard from '~/pages/Home';
-import { Group } from '~/pages/Group';
+import { Class } from '~/pages/Class';
 import { Assignment } from '~/pages/Assignment';
 import { Question } from '~/pages/Question';
 import { Role } from '~/pages/Role';
@@ -18,8 +18,8 @@ const privateRoutes = [
         component: Dashboard,
     },
     {
-        path: config.routes.group.index,
-        component: Group,
+        path: config.routes.class.index,
+        component: Class,
     },
     {
         path: config.routes.subject.index,
