@@ -1,8 +1,11 @@
 import { Fragment, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
+// Theme
 import 'primereact/resources/themes/mira/theme.css';
+// Core
 import 'primereact/resources/primereact.min.css';
+//icons
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 

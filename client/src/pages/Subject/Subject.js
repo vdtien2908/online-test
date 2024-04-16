@@ -129,26 +129,27 @@ function Subject() {
             <div className={style.body}>
                 <DataTable
                     value={products}
-                    size="small"
                     showGridlines
                     stripedRows
                     paginator
-                    rowsPerPageOptions={[5, 10, 25, 50]}
+                    rowsPerPageOptions={[5, 10, 15, 20]}
+                    paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
                     rows={10}
+                    currentPageReportTemplate="Trang {first} / {totalRecords}"
                 >
-                    <Column field="name" header="Name" sortable></Column>
-                    <Column field="price" header="Price" sortable></Column>
+                    <Column field="name" header="Tên môn" sortable></Column>
+                    <Column field="price" header="Số tín chỉ" sortable></Column>
                     <Column
                         field="category"
-                        header="Category"
+                        header="Thực hành"
                         sortable
                     ></Column>
                     <Column
                         field="quantity"
-                        header="Quantity"
+                        header="Lý thuyết"
                         sortable
                     ></Column>
-                    <Column field="rating" header="Rating" sortable></Column>
+                    <Column field="rating" header="Hành động"></Column>
                 </DataTable>
             </div>
             {/* End body */}

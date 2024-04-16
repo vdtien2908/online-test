@@ -17,11 +17,13 @@
 html ::-webkit-scrollbar {
     border-radius: 0px;
     width: 8px;
+    height: 8px;
 }
 
 html *::-webkit-scrollbar {
     border-radius: 0;
     width: 8px;
+    height: 8px;
 }
 
 html ::-webkit-scrollbar-thumb {
@@ -114,6 +116,13 @@ a[href] {
     text-align: center;
 }
 
+.p-datatable-wrapper {
+    overflow: auto;
+    height: calc(100vh - 256px);
+    margin-bottom: 12px;
+}
+
+// Overwrite react prime
 .p-datatable-table {
     width: 100%;
     border-collapse: collapse;
@@ -123,12 +132,21 @@ a[href] {
         position: sticky;
         top: 0;
         box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 2px 0px;
-        text-align: center;
 
         th {
             padding: 10px 20px;
             font-size: 16px;
             font-weight: 500;
+            text-align: center;
+
+            .p-column-header-content {
+                justify-content: center;
+                gap: 6px;
+            }
+
+            .p-sortable-column-icon {
+                width: 12px;
+            }
         }
     }
 
@@ -142,4 +160,10 @@ a[href] {
             padding: 8px 20px;
         }
     }
+}
+
+.p-paginator .p-dropdown {
+    align-items: center;
+    padding-left: 8px;
+    height: 32px;
 }
