@@ -1,5 +1,159 @@
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { useState } from 'react';
+
+import clsx from 'clsx';
+
+// Style css
+import style from './Subject.module.scss';
+
+// Import component
+import TopPage from '~/components/TopPage';
+import Search from '~/components/Search';
+import Dropdown from '~/components/Dropdown';
+
 function Subject() {
-    return <h1>Môn học</h1>;
+    const [selectedSubject, setSelectedSubject] = useState(null);
+    const options = [
+        { name: 'Mới nhất', code: 'Desc' },
+        { name: 'Cũ nhất', code: 'ASC' },
+    ];
+    const products = [
+        {
+            id: 1,
+            name: 'Apple Watch',
+            price: '₦350,000',
+            category: 'Accessories',
+            quantity: '7',
+            rating: '5',
+        },
+        {
+            id: 2,
+            name: 'Fitness watch',
+            price: '₦10,000',
+            category: 'Fitness',
+            quantity: '23',
+            rating: '2',
+        },
+        {
+            id: 3,
+            name: 'Beach dress',
+            price: '₦25,000',
+            category: 'Clothing',
+            quantity: '5',
+            rating: '4',
+        },
+        {
+            id: 4,
+            name: 'Washing machine',
+            price: '₦260,000',
+            category: 'Electronics',
+            quantity: '10',
+            rating: '4',
+        },
+        {
+            id: 5,
+            name: 'Blue Jeans',
+            price: '₦10,000',
+            category: 'Clothing',
+            quantity: '50',
+            rating: '5',
+        },
+        {
+            id: 6,
+            name: 'Samsung Watch',
+            price: '₦270,000',
+            category: 'Accessories',
+            quantity: '7',
+            rating: '3',
+        },
+        {
+            id: 7,
+            name: 'Yoga mat',
+            price: '₦15,000',
+            category: 'Fitness',
+            quantity: '15',
+            rating: '4',
+        },
+        {
+            id: 8,
+            name: 'Jumpsuit',
+            price: '₦15,700',
+            category: 'Clothing',
+            quantity: '30',
+            rating: '5',
+        },
+        {
+            id: 9,
+            name: 'Hand mixer',
+            price: '₦50,000',
+            category: 'Electronics',
+            quantity: '10',
+            rating: '4',
+        },
+        {
+            id: 10,
+            name: 'Pallazo',
+            price: '₦12,000',
+            category: 'Clothing',
+            quantity: '4',
+            rating: '3',
+        },
+    ];
+
+    return (
+        <div className={clsx(style.wrapper)}>
+            {/* Start Head  */}
+            <div className={style.head}>
+                <TopPage title="Danh sách lớp học" textButton="Tạo lớp học" />
+                <div className={style.head_body}>
+                    <Dropdown
+                        value={selectedSubject}
+                        onChange={(e) => setSelectedSubject(e.value)}
+                        options={options}
+                        optionLabel="name"
+                        placeholder="Tất cả"
+                        className={clsx(style.dropdown)}
+                    />
+                    <Search
+                        placeholder="Tìm kiếm môn học..."
+                        className={clsx(style.search)}
+                        onChange={(e) => {
+                            console.log(e.target.value);
+                        }}
+                    />
+                </div>
+            </div>
+            {/* End Head  */}
+            {/* Start body */}
+            <div className={style.body}>
+                <DataTable
+                    value={products}
+                    size="small"
+                    showGridlines
+                    stripedRows
+                    paginator
+                    rowsPerPageOptions={[5, 10, 25, 50]}
+                    rows={10}
+                >
+                    <Column field="name" header="Name" sortable></Column>
+                    <Column field="price" header="Price" sortable></Column>
+                    <Column
+                        field="category"
+                        header="Category"
+                        sortable
+                    ></Column>
+                    <Column
+                        field="quantity"
+                        header="Quantity"
+                        sortable
+                    ></Column>
+                    <Column field="rating" header="Rating" sortable></Column>
+                </DataTable>
+            </div>
+            {/* End body */}
+        </div>
+    );
 }
 
 export default Subject;

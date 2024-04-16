@@ -1,5 +1,17 @@
+import TopPage from '~/components/TopPage';
+
+// Component
+import Wrapper from '~/components/Wrapper/Wrapper';
+
 function User() {
-    return <h1>Người dùng</h1>;
+    return (
+        <Wrapper>
+            <TopPage
+                title="Danh sách người dùng"
+                textButton="Thêm người dùng"
+            />
+        </Wrapper>
+    );
 }
 
 export default User;

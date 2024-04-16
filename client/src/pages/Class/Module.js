@@ -40,6 +40,48 @@ function Module({ data }) {
             note: 'Giải tích 1',
             subject: 'Đại số tuyến tính',
         },
+        {
+            id: 4,
+            name: 'Lớp KTPM-0220',
+            member: 20,
+            note: 'Học sáng 2, sáng 3',
+            subject: 'Đại số tuyến tính',
+        },
+        {
+            id: 5,
+            name: 'Lớp KTPM-0220',
+            member: 20,
+            note: 'Giải tích 1',
+            subject: 'Đại số tuyến tính',
+        },
+        {
+            id: 4,
+            name: 'Lớp KTPM-0220',
+            member: 20,
+            note: 'Học sáng 2, sáng 3',
+            subject: 'Đại số tuyến tính',
+        },
+        {
+            id: 5,
+            name: 'Lớp KTPM-0220',
+            member: 20,
+            note: 'Giải tích 1',
+            subject: 'Đại số tuyến tính',
+        },
+        {
+            id: 4,
+            name: 'Lớp KTPM-0220',
+            member: 20,
+            note: 'Học sáng 2, sáng 3',
+            subject: 'Đại số tuyến tính',
+        },
+        {
+            id: 5,
+            name: 'Lớp KTPM-0220',
+            member: 20,
+            note: 'Giải tích 1',
+            subject: 'Đại số tuyến tính',
+        },
     ];
 
     return (

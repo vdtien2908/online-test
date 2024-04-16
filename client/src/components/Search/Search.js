@@ -6,6 +6,7 @@ import style from './Search.module.scss';
 function Search({ placeholder, onChange, className }) {
     return (
         <div className={clsx(style.wrapper, className)}>
+            {/* <DropDown /> */}
             <input placeholder={placeholder} onChange={onChange} />
         </div>
     );
