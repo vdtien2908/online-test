@@ -17,6 +17,7 @@ function Button({
     children,
     leftIcon,
     rightIcon,
+    className,
     ...passProps
 }) {
     let Comp = 'button';
@@ -33,19 +34,23 @@ function Button({
         Comp = 'a';
     }
 
-    const classes = clsx(style.wrapper, {
-        [style.primary]: primary,
-        [style.outline]: outline,
-        [style.edit]: edit,
-        [style.delete]: trash,
-        [style.submit]: submit,
-        [style.destroy]: destroy,
-    });
+    const classes = clsx(
+        style.wrapper,
+        {
+            [style.primary]: primary,
+            [style.outline]: outline,
+            [style.edit]: edit,
+            [style.delete]: trash,
+            [style.submit]: submit,
+            [style.destroy]: destroy,
+        },
+        className
+    );
 
     return (
         <Comp className={classes} {..._props}>
             {leftIcon && <span className={clsx(style.icon)}>{leftIcon}</span>}
-            <span>{children}</span>
+            {children && <span>{children}</span>}
             {rightIcon && <span className={clsx(style.icon)}>{rightIcon}</span>}
         </Comp>
     );

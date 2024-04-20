@@ -1,7 +1,7 @@
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { useState } from 'react';
-
+import { FaPencil, FaRegTrashCan, FaEllipsisVertical } from 'react-icons/fa6';
 import clsx from 'clsx';
 
 // Style css
@@ -11,6 +11,8 @@ import style from './Subject.module.scss';
 import TopPage from '~/components/TopPage';
 import Search from '~/components/Search';
 import Dropdown from '~/components/Dropdown';
+import Button from '~/components/Button';
+import Tooltip from '~/components/Tooltip';
 
 function Subject() {
     const [selectedSubject, setSelectedSubject] = useState(null);
@@ -18,94 +20,73 @@ function Subject() {
         { name: 'Mới nhất', code: 'Desc' },
         { name: 'Cũ nhất', code: 'ASC' },
     ];
-    const products = [
+    const subjects = [
         {
             id: 1,
-            name: 'Apple Watch',
-            price: '₦350,000',
-            category: 'Accessories',
-            quantity: '7',
-            rating: '5',
+            subjectName: 'Đại số tuyến tính',
+            numberCredits: 3,
+            practice: 30,
+            theory: 15,
         },
         {
             id: 2,
-            name: 'Fitness watch',
-            price: '₦10,000',
-            category: 'Fitness',
-            quantity: '23',
-            rating: '2',
+            subjectName: 'Trí tuệ nhân tạo',
+            numberCredits: 2,
+            practice: 30,
+            theory: 15,
         },
         {
             id: 3,
-            name: 'Beach dress',
-            price: '₦25,000',
-            category: 'Clothing',
-            quantity: '5',
-            rating: '4',
+            subjectName: 'Gải tích 3',
+            numberCredits: 7,
+            practice: 30,
+            theory: 15,
         },
         {
             id: 4,
-            name: 'Washing machine',
-            price: '₦260,000',
-            category: 'Electronics',
-            quantity: '10',
-            rating: '4',
-        },
-        {
-            id: 5,
-            name: 'Blue Jeans',
-            price: '₦10,000',
-            category: 'Clothing',
-            quantity: '50',
-            rating: '5',
-        },
-        {
-            id: 6,
-            name: 'Samsung Watch',
-            price: '₦270,000',
-            category: 'Accessories',
-            quantity: '7',
-            rating: '3',
-        },
-        {
-            id: 7,
-            name: 'Yoga mat',
-            price: '₦15,000',
-            category: 'Fitness',
-            quantity: '15',
-            rating: '4',
-        },
-        {
-            id: 8,
-            name: 'Jumpsuit',
-            price: '₦15,700',
-            category: 'Clothing',
-            quantity: '30',
-            rating: '5',
-        },
-        {
-            id: 9,
-            name: 'Hand mixer',
-            price: '₦50,000',
-            category: 'Electronics',
-            quantity: '10',
-            rating: '4',
-        },
-        {
-            id: 10,
-            name: 'Pallazo',
-            price: '₦12,000',
-            category: 'Clothing',
-            quantity: '4',
-            rating: '3',
+            subjectName: 'Cấu trúc dữ liệu',
+            numberCredits: 10,
+            practice: 30,
+            theory: 15,
         },
     ];
+
+    const actionBodyTemplate = (rowData) => {
+        return (
+            <div className={clsx(style.table_action)}>
+                <Tooltip content="Chỉnh sửa">
+                    <span>
+                        <Button
+                            className={clsx(style.table_icon)}
+                            outline
+                            edit
+                            leftIcon={<FaPencil />}
+                        />
+                    </span>
+                </Tooltip>
+                <Tooltip content="Xoá">
+                    <span>
+                        <Button
+                            className={clsx(style.table_icon)}
+                            outline
+                            trash
+                            leftIcon={<FaRegTrashCan />}
+                        />
+                    </span>
+                </Tooltip>
+            </div>
+        );
+    };
+
+    const IndexBodyTemplate = (data, props) => {
+        return props.rowIndex + 1;
+    };
 
     return (
         <div className={clsx(style.wrapper)}>
             {/* Start Head  */}
             <div className={style.head}>
-                <TopPage title="Danh sách lớp học" textButton="Tạo lớp học" />
+                <TopPage title="Danh sách lớp học" textButton="Thêm môn học" />
                 <div className={style.head_body}>
                     <Dropdown
                         value={selectedSubject}
@@ -128,7 +109,7 @@ function Subject() {
             {/* Start body */}
             <div className={style.body}>
                 <DataTable
-                    value={products}
+                    value={subjects}
                     showGridlines
                     stripedRows
                     paginator
@@ -137,19 +118,39 @@ function Subject() {
                     rows={10}
                     currentPageReportTemplate="Trang {first} / {totalRecords}"
                 >
-                    <Column field="name" header="Tên môn" sortable></Column>
-                    <Column field="price" header="Số tín chỉ" sortable></Column>
                     <Column
-                        field="category"
+                        body={IndexBodyTemplate}
+                        header="#"
+                        bodyClassName="text-center"
+                    />
+                    <Column
+                        field="subjectName"
+                        header="Tên môn"
+                        sortable
+                    ></Column>
+                    <Column
+                        field="numberCredits"
+                        header="Số tín chỉ"
+                        bodyClassName="text-center"
+                        sortable
+                    ></Column>
+                    <Column
+                        field="practice"
                         header="Thực hành"
+                        bodyClassName="text-center"
                         sortable
                     ></Column>
                     <Column
-                        field="quantity"
+                        field="theory"
                         header="Lý thuyết"
+                        bodyClassName="text-center"
                         sortable
                     ></Column>
-                    <Column field="rating" header="Hành động"></Column>
+                    <Column
+                        body={actionBodyTemplate}
+                        header={<FaEllipsisVertical />}
+                        bodyClassName="text-center"
+                    ></Column>
                 </DataTable>
             </div>
             {/* End body */}
