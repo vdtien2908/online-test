@@ -17,11 +17,6 @@
     border-radius: 2px;
 }
 
-.head_body {
-    display: flex;
-    gap: 8px;
-}
-
 .body {
     margin-top: 12px;
 }
@@ -112,10 +107,4 @@
 
 .text_center {
     text-align: center;
-}
-
-.dropdown {
-    min-width: 150px;
-    padding: 6px 12px;
-    box-shadow: none;
 }

@@ -24,14 +24,14 @@ function Class() {
             {/* Start Head  */}
             <div className={style.head}>
                 <TopPage title="Danh sách lớp học" textButton="Tạo lớp học" />
-                <div className={style.head_body}>
+                <div className="head_body">
                     <Dropdown
                         value={selectedSubject}
                         onChange={(e) => setSelectedSubject(e.value)}
                         options={subjects}
                         optionLabel="name"
                         placeholder="Tất cả"
-                        className={clsx(style.dropdown)}
+                        className="dropdown"
                     />
                     <Search
                         placeholder="Tìm kiếm lớp..."

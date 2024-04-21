@@ -13,6 +13,7 @@ import Search from '~/components/Search';
 import Dropdown from '~/components/Dropdown';
 import Button from '~/components/Button';
 import Tooltip from '~/components/Tooltip';
+import Wrapper from '~/components/Wrapper';
 
 function Subject() {
     const [selectedSubject, setSelectedSubject] = useState(null);
@@ -53,11 +54,11 @@ function Subject() {
 
     const actionBodyTemplate = (rowData) => {
         return (
-            <div className={clsx(style.table_action)}>
+            <div className="table_action">
                 <Tooltip content="Chỉnh sửa">
                     <span>
                         <Button
-                            className={clsx(style.table_icon)}
+                            className="table_icon"
                             outline
                             edit
                             leftIcon={<FaPencil />}
@@ -67,7 +68,7 @@ function Subject() {
                 <Tooltip content="Xoá">
                     <span>
                         <Button
-                            className={clsx(style.table_icon)}
+                            className="table_icon"
                             outline
                             trash
                             leftIcon={<FaRegTrashCan />}
@@ -78,23 +79,23 @@ function Subject() {
         );
     };
 
-    const IndexBodyTemplate = (data, props) => {
+    const indexBodyTemplate = (data, props) => {
         return props.rowIndex + 1;
     };
 
     return (
-        <div className={clsx(style.wrapper)}>
+        <Wrapper>
             {/* Start Head  */}
             <div className={style.head}>
                 <TopPage title="Danh sách lớp học" textButton="Thêm môn học" />
-                <div className={style.head_body}>
+                <div className="head_body">
                     <Dropdown
                         value={selectedSubject}
                         onChange={(e) => setSelectedSubject(e.value)}
                         options={options}
                         optionLabel="name"
                         placeholder="Tất cả"
-                        className={clsx(style.dropdown)}
+                        className="dropdown"
                     />
                     <Search
                         placeholder="Tìm kiếm môn học..."
@@ -106,6 +107,7 @@ function Subject() {
                 </div>
             </div>
             {/* End Head  */}
+
             {/* Start body */}
             <div className={style.body}>
                 <DataTable
@@ -119,7 +121,7 @@ function Subject() {
                     currentPageReportTemplate="Trang {first} / {totalRecords}"
                 >
                     <Column
-                        body={IndexBodyTemplate}
+                        body={indexBodyTemplate}
                         header="#"
                         bodyClassName="text-center"
                     />
@@ -154,7 +156,7 @@ function Subject() {
                 </DataTable>
             </div>
             {/* End body */}
-        </div>
+        </Wrapper>
     );
 }
 
