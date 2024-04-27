@@ -111,6 +111,7 @@ function Question() {
             <div className={style.head}>
                 <TopPage title="Danh sách câu hỏi" textButton="Thêm câu hỏi" />
                 <div className="head_body">
+                    {/* Selected subject */}
                     <Dropdown
                         value={selectedSubject}
                         onChange={(e) => setSelectedSubject(e.value)}
@@ -119,6 +120,7 @@ function Question() {
                         placeholder="Chọn môn"
                         className="dropdown"
                     />
+                    {/* Selected chapter */}
                     <Dropdown
                         value={selectedChapter}
                         onChange={(e) => setSelectedChapter(e.value)}
@@ -127,6 +129,7 @@ function Question() {
                         placeholder="Chọn chương"
                         className="dropdown"
                     />
+                    {/* Selected lever */}
                     <Dropdown
                         value={selectedLever}
                         onChange={(e) => setSelectedLever(e.value)}
@@ -135,6 +138,7 @@ function Question() {
                         placeholder="Độ khó"
                         className="dropdown"
                     />
+                    {/* form search */}
                     <Search
                         placeholder="Tìm kiếm câu hỏi..."
                         className={clsx(style.search)}

@@ -30,7 +30,7 @@ function Class() {
                         onChange={(e) => setSelectedSubject(e.value)}
                         options={subjects}
                         optionLabel="name"
-                        placeholder="Tất cả"
+                        placeholder="Chọn môn"
                         className="dropdown"
                     />
                     <Search
