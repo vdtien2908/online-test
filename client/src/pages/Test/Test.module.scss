@@ -1,0 +1,82 @@
+.list_test {
+    padding-top: 8px;
+    height: 490px;
+    overflow-y: auto;
+}
+
+.test_item {
+    background-color: #fff;
+    box-shadow: var(--shadow);
+    padding: 10px 10px 10px 20px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.test_item + .test_item {
+    margin-top: 12px;
+}
+
+.test_item.pending {
+    border-left: 3px solid var(--primary-color);
+}
+
+.test_item.approved {
+    border-left: 3px solid orangered;
+}
+
+.test_item.cancel {
+    border-left: 3px solid #ccc;
+}
+
+.test_title {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-color);
+}
+
+.test_assignment,
+.test_duration {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #777;
+}
+
+// Status note
+.note_status {
+    position: absolute;
+    z-index: 99;
+    bottom: 10px;
+    left: 20px;
+
+    ul {
+        display: flex;
+        list-style: none;
+        gap: 20px;
+
+        li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    }
+}
+
+.status_color {
+    width: 30px;
+    height: 20px;
+    border-radius: 4px;
+}
+
+.status_color.pending {
+    background-color: var(--primary-color);
+}
+
+.status_color.approved {
+    background-color: orangered;
+}
+
+.status_color.cancel {
+    background-color: #ccc;
+}
