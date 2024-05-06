@@ -1,6 +1,6 @@
 .list_test {
     padding-top: 8px;
-    height: 490px;
+    height: 470px;
     overflow-y: auto;
 }
 
@@ -47,8 +47,8 @@
 .note_status {
     position: absolute;
     z-index: 99;
-    bottom: 10px;
-    left: 20px;
+    bottom: -18px;
+    left: 40px;
 
     ul {
         display: flex;

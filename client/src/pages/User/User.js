@@ -5,7 +5,7 @@ import { FaPencil, FaRegTrashCan, FaEllipsisVertical } from 'react-icons/fa6';
 import clsx from 'clsx';
 
 // Style css
-import style from './user.module.scss';
+import style from './User.module.scss';
 
 // Import component
 import TopPage from '~/components/TopPage';
@@ -60,6 +60,14 @@ function User() {
         );
     };
 
+    const genderBodyTemplate = (rowData) => {
+        if (rowData.gender !== 0) {
+            return 'Nữ';
+        }
+
+        return 'Nam';
+    };
+
     const indexBodyTemplate = (data, props) => {
         return props.rowIndex + 1;
     };
@@ -111,7 +119,8 @@ function User() {
                     />
                     <Column
                         field="code"
-                        header="Mã số sinh viên"
+                        header="Mã số"
+                        bodyClassName="text-center"
                         sortable
                     ></Column>
                     <Column
@@ -124,6 +133,7 @@ function User() {
                         field="gender"
                         header="Giới tính"
                         bodyClassName="text-center"
+                        body={genderBodyTemplate}
                         sortable
                     ></Column>
                     <Column
