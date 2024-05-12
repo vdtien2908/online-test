@@ -7,8 +7,9 @@ import { Role } from '~/pages/Role';
 import { Subject } from '~/pages/Subject';
 import { Test } from '~/pages/Test';
 import { User } from '~/pages/User';
+import { TakeATest } from '~/pages/TakeATest';
 import Login from '~/pages/Login';
-
+import EmptyLayout from '~/layouts/EmptyLayout';
 // Config
 import config from '~/configs';
 
@@ -32,6 +33,11 @@ const privateRoutes = [
     {
         path: config.routes.test.index,
         component: Test,
+    },
+    {
+        path: config.routes.takeATest.index,
+        component: TakeATest,
+        layout: EmptyLayout,
     },
     {
         path: config.routes.assignment.index,

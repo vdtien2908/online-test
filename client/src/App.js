@@ -43,6 +43,7 @@ function App() {
                             {route.children &&
                                 route.children.map((child, index) => {
                                     const Comp = child.component;
+
                                     return (
                                         <Route
                                             key={index}

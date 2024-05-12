@@ -5,6 +5,12 @@ import { SpeedDial } from 'primereact/speeddial';
 // Style css
 import style from './Test.module.scss';
 
+// Component
+import Button from '~/components/Button';
+
+// Router
+import routes from '~/configs/routes';
+
 function TestItem({ pending, approved, cancel }) {
     const items = [
         {
@@ -60,7 +66,13 @@ function TestItem({ pending, approved, cancel }) {
                 <FaBusinessTime />
                 <p>Diễn ra từ 6h20 5/5/2024 tới 8h20 6/5/2024</p>
             </div>
-
+            <div className={clsx(style.btn_test_start)}>
+                {approved && (
+                    <Button primary to={'/take-a-test/1'}>
+                        Bắt đầu làm bài
+                    </Button>
+                )}
+            </div>
             <div className={clsx(style.test_action)}>
                 <SpeedDial
                     model={items}

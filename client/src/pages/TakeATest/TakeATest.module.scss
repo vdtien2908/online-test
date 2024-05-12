@@ -1,0 +1,33 @@
+.wrapper {
+    background-color: #ccc;
+}
+
+.topbar_wrapper {
+    background-color: #fff;
+    border-bottom: 1px solid #777;
+}
+
+.topbar {
+    padding: 0 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+}
+
+.topbar_right {
+    display: flex;
+    gap: 40px;
+
+    .time {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+}
+
+.btn_out {
+    svg {
+        color: red;
+    }
+}

@@ -21,6 +21,9 @@ const routes = {
     test: {
         index: '/test',
     },
+    takeATest: {
+        index: '/take-a-test/:id',
+    },
     assignment: {
         index: '/assignment',
     },
