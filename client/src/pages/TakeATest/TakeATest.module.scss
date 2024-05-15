@@ -1,10 +1,16 @@
 .wrapper {
-    background-color: #ccc;
+    background-color: #f1f5f9;
 }
 
 .topbar_wrapper {
     background-color: #fff;
-    border-bottom: 1px solid #777;
+    border-bottom: 1px solid #e2e8f0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    box-shadow: var(--shadow);
 }
 
 .topbar {
@@ -30,4 +36,118 @@
     svg {
         color: red;
     }
+}
+
+.content {
+    margin-top: 20px;
+    padding: 70px 12px 0 12px;
+    display: flex;
+    gap: 24px;
+}
+
+.left_content {
+    width: 75%;
+}
+
+// Question
+.question {
+    background-color: #fff;
+    box-shadow: var(--shadow);
+    border-radius: 4px;
+}
+
+.question_number {
+    padding: 20px 10px 16px 10px;
+
+    p {
+        margin-top: 4px;
+    }
+}
+
+.question_answer {
+    padding: 10px;
+}
+
+.answer_require {
+    text-align: center;
+    font-weight: 500;
+    font-size: 16px;
+    color: #475569;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: calc(50% - 100px);
+        right: 0;
+        height: 1px;
+        background-color: #ccc;
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: calc(50% - 100px);
+        left: 0;
+        height: 1px;
+        background-color: #ccc;
+    }
+}
+
+.answer {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    & + & {
+        margin-top: 12px;
+    }
+}
+
+// Right content
+.right_content {
+    width: 25%;
+}
+
+.list_question_container {
+    position: fixed;
+    background-color: #fff;
+    padding: 12px;
+    border-radius: 4px;
+    top: 90px;
+    width: 25%;
+    right: 12px;
+    box-shadow: var(--shadow);
+}
+
+.list_question {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    gap: 10px;
+}
+
+.list_question_title {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.number_question {
+    border: 1px solid var(--primary);
+    height: 32px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--primary);
+    font-size: 18px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.number_question.selected {
+    background-color: var(--primary);
+    color: #fff;
 }
