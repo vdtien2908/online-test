@@ -8,11 +8,11 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'questionId',
             });
 
-            QuestionModel.hasMany(Model.ResultDetailModel, {
+            QuestionModel.hasMany(models.ResultDetailModel, {
                 foreignKey: 'questionId',
             });
 
-            QuestionModel.hasMany(models.testDetailModel, {
+            QuestionModel.hasMany(models.TestDetailModel, {
                 foreignKey: 'questionId',
             });
 
@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'userId',
             });
 
-            QuestionModel.belongsTo(Model.ChapterModel, {
+            QuestionModel.belongsTo(models.ChapterModel, {
                 foreignKey: 'chapterId',
             });
         }

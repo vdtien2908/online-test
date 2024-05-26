@@ -1,4 +1,4 @@
-import { errHandler, notFound } from '../http/middlewares/errHandler';
+import { errHandler, notFound } from '../app/http/middlewares/errHandler';
 
 import authRouter from './authRouter';
 

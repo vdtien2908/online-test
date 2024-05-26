@@ -40,7 +40,6 @@ module.exports = (sequelize, DataTypes) => {
             gender: DataTypes.BOOLEAN,
             dob: DataTypes.DATE,
             phoneNumber: DataTypes.STRING,
-            avatar: DataTypes.TEXT,
             password: DataTypes.STRING,
             refreshToken: DataTypes.STRING,
             passwordChangeAt: DataTypes.STRING,

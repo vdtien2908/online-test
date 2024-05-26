@@ -12,11 +12,11 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'creator',
             });
 
-            ClassModel.hasMany(models.assignExamQuestionModel, {
+            ClassModel.hasMany(models.AssignExamQuestionModel, {
                 foreignKey: 'classId',
             });
 
-            ClassModel.hasMany(models.classDetail, {
+            ClassModel.hasMany(models.ClassDetailModel, {
                 foreignKey: 'classId',
             });
         }

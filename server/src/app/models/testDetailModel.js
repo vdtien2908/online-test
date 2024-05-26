@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     class TestDetailModel extends Model {
         static associate(models) {
             // define association here
-            TestDetailModel.belongsTo(models.questionModel, {
+            TestDetailModel.belongsTo(models.QuestionModel, {
                 foreignKey: 'questionId',
             });
 

@@ -14,7 +14,6 @@ module.exports = {
             gender: Sequelize.BOOLEAN,
             dob: Sequelize.DATE,
             phoneNumber: Sequelize.STRING,
-            avatar: Sequelize.TEXT,
             password: Sequelize.STRING,
             refreshToken: Sequelize.STRING,
             passwordChangeAt: Sequelize.STRING,
