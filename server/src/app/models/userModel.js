@@ -1,5 +1,6 @@
 'use strict';
 const { Model } = require('sequelize');
+import bcrypt from 'bcrypt';
 module.exports = (sequelize, DataTypes) => {
     class UserModel extends Model {
         static associate(models) {
@@ -32,6 +33,11 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'roleId',
             });
         }
+
+        // Check password
+        async isCorrectPassword(password) {
+            return await bcrypt.compare(password, this.password);
+        }
     }
     UserModel.init(
         {
@@ -52,7 +58,22 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'UserModel',
             tableName: 'users',
+            hooks: {
+                beforeCreate: async (user) => {
+                    if (user.password) {
+                        const salt = await bcrypt.genSalt(10);
+                        user.password = await bcrypt.hash(user.password, salt);
+                    }
+                },
+                beforeUpdate: async (user) => {
+                    if (user.changed('password')) {
+                        const salt = await bcrypt.genSalt(10);
+                        user.password = await bcrypt.hash(user.password, salt);
+                    }
+                },
+            },
         }
     );
+
     return UserModel;
 };

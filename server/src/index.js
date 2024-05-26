@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 import initRoutes from './routers';
 
 dotenv.config();
@@ -10,6 +11,9 @@ const app = express();
 
 // Logger request
 app.use(morgan('combined'));
+
+// Cookie-Parser
+app.use(cookieParser());
 
 // Body parser
 app.use(express.json());
