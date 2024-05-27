@@ -60,7 +60,6 @@ body {
 }
 
 button,
-input,
 [tabindex] {
     outline: none;
     border: none;
@@ -68,43 +67,6 @@ input,
 
 a[href] {
     text-decoration: none;
-}
-
-.form_container {
-    padding: 12px;
-}
-
-.form_group {
-    & + & {
-        margin-top: 8px;
-    }
-
-    label {
-        padding-bottom: 8px;
-        font-size: 16px;
-        display: block;
-
-        span {
-            color: red;
-        }
-    }
-
-    select,
-    textarea,
-    input {
-        border-radius: 2px;
-        border: 1px solid #f3f3f3;
-        font-size: 14px;
-        transition: all 0.3s ease;
-        padding: 12px 20px;
-        width: 100%;
-        outline: none;
-
-        &:focus {
-            border-color: #80bdff;
-            color: #495057;
-        }
-    }
 }
 
 .form_button {
@@ -238,4 +200,17 @@ a[href] {
             border-radius: 50%;
         }
     }
+}
+
+input {
+    box-shadow: none;
+}
+
+.p-float-label label {
+    transform: translateY(-50%);
+}
+
+.p-float-label:has(input.p-filled) label,
+.p-float-label:has(input:focus) label {
+    font-size: 14px;
 }

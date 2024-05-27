@@ -1,7 +1,7 @@
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { useState } from 'react';
-import { FaPencil, FaRegTrashCan, FaEllipsisVertical } from 'react-icons/fa6';
+import { FaRegTrashCan, FaEllipsisVertical } from 'react-icons/fa6';
 import clsx from 'clsx';
 
 // Style css

@@ -9,7 +9,7 @@ import style from './Test.module.scss';
 import Button from '~/components/Button';
 
 // Router
-import routes from '~/configs/routes';
+// import routes from '~/configs/routes';
 
 function TestItem({ pending, approved, cancel }) {
     const items = [
