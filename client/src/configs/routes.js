@@ -1,5 +1,5 @@
 const routes = {
-    dashboard: { index: '/' },
+    dashboard: { index: '/dashboard' },
     class: {
         index: '/class',
         add: 'create',
@@ -35,6 +35,9 @@ const routes = {
     },
     login: {
         index: '/login',
+    },
+    about: {
+        index: '/',
     },
 };
 

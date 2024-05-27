@@ -8,6 +8,8 @@ import {
 } from 'react-icons/fa';
 import clsx from 'clsx';
 
+import config from '~/configs';
+
 // Style css
 import style from './Header.module.scss';
 
@@ -39,7 +41,7 @@ function Header({ onClick }) {
             <div className={clsx(style.headerLeft)}>
                 {/* Logo */}
                 <div className={clsx(style.headerLogo)}>
-                    <Link to="/">
+                    <Link to={config.routes.dashboard.index}>
                         Online
                         <sup style={{ fontSize: 14 }}>TEST</sup>
                     </Link>

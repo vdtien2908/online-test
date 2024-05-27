@@ -227,3 +227,15 @@ a[href] {
 .p-2 {
     padding: 16px;
 }
+
+.p-carousel-indicators {
+    gap: 14px;
+
+    .p-carousel-indicator {
+        button {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+        }
+    }
+}

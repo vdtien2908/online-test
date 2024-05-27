@@ -8,6 +8,7 @@ import { Subject } from '~/pages/Subject';
 import { Test } from '~/pages/Test';
 import { User } from '~/pages/User';
 import { TakeATest } from '~/pages/TakeATest';
+import About from '~/pages/About';
 import Login from '~/pages/Login';
 import EmptyLayout from '~/layouts/EmptyLayout';
 // Config
@@ -51,13 +52,19 @@ const privateRoutes = [
         path: config.routes.role.index,
         component: Role,
     },
+];
+
+const publicRoutes = [
     {
         path: config.routes.login.index,
         component: Login,
-        layout: null,
+        layout: EmptyLayout,
+    },
+    {
+        path: config.routes.about.index,
+        component: About,
+        layout: EmptyLayout,
     },
 ];
-
-const publicRoutes = [];
 
 export { privateRoutes, publicRoutes };
