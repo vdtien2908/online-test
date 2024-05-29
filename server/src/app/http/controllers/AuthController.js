@@ -92,7 +92,9 @@ class AuthController {
         // Save refreshToken to cookie
         res.cookie('refreshToken', newRefreshToken, {
             httpOnly: true, // Only accessible via HTTP
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days,
+            secure: false,
+            sameSite: 'none',
         });
 
         return res.status(200).json({

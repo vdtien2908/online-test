@@ -3,6 +3,7 @@ import express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import initRoutes from './routers';
+import cors from 'cors';
 
 dotenv.config();
 const port = process.env.PORT || 8000;
@@ -19,9 +20,14 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', function (req, res) {
-    res.send('Hello World');
-});
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    credentials: true,
+};
+
+// Middleware cors
+app.use(cors(corsOptions));
+
 // init router
 initRoutes(app);
 

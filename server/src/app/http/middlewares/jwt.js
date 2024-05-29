@@ -6,7 +6,7 @@ dotenv.config();
 const generateAccessToken = (uid, role) => {
     const secretKey = process.env.JWT_SECRET;
     const payload = { id: uid, role };
-    return jwt.sign(payload, secretKey, { expiresIn: '2d' });
+    return jwt.sign(payload, secretKey, { expiresIn: '2m' });
 };
 
 const generateRefreshToken = (uid) => {

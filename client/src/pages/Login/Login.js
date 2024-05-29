@@ -1,7 +1,9 @@
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { FloatLabel } from 'primereact/floatlabel';
+import { Toast } from 'primereact/toast';
+import { useNavigate } from 'react-router-dom';
 
 // Style
 import style from './Login.module.scss';
@@ -10,19 +12,96 @@ import bgr_login from '~/assets/images/bgr-login-1.png';
 // Component
 import Button from '~/components/Button';
 
+// Utils
+import * as request from '~/utils/httpRequest';
+
 function Login() {
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const toastRef = useRef(null);
 
     useEffect(() => {
         document.title = 'Đăng nhập';
     }, []);
+
+    const fetchApi = async () => {
+        if (!email || !password) {
+            showWarn();
+            return;
+        }
+
+        try {
+            const req = await request.post('/api/auth/login', {
+                email,
+                password,
+            });
+
+            if (req && req.data) {
+                const data = req.data;
+                const accessToken = data.accessToken;
+
+                // Save the accessToken to local storage
+                localStorage.setItem('accessToken', accessToken);
+                navigate('/dashboard');
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                const req = error.response.data;
+                if (req.message === 'Invalid credentials') {
+                    showInvalid();
+                } else {
+                    showError();
+                }
+            } else {
+                showError();
+            }
+        }
+    };
+
+    const showSuccess = () => {
+        toastRef.current.show({
+            severity: 'success',
+            summary: 'Cảnh báo',
+            detail: 'Đăng nhập thành công',
+            life: 3000,
+        });
+    };
+
+    const showWarn = () => {
+        toastRef.current.show({
+            severity: 'warn',
+            summary: 'Cảnh báo',
+            detail: 'Vui lòng nhập email hoặc mật khẩu.',
+            life: 3000,
+        });
+    };
+
+    const showInvalid = () => {
+        toastRef.current.show({
+            severity: 'error',
+            summary: 'Cảnh báo',
+            detail: 'Email hoặc mật khẩu không chỉnh xác!',
+            life: 3000,
+        });
+    };
+
+    const showError = () => {
+        toastRef.current.show({
+            severity: 'error',
+            summary: 'Lỗi máy chủ',
+            detail: 'Lỗi máy chủ vui lòng thử lại sau',
+            life: 3000,
+        });
+    };
 
     return (
         <div
             className={clsx(style.wrapper)}
             style={{ backgroundImage: `url(${bgr_login})` }}
         >
+            <Toast ref={toastRef} />
             <div className={clsx(style.login_container)}>
                 <div className={clsx(style.left)}>
                     <div className={clsx(style.form_login)}>
@@ -41,7 +120,7 @@ function Login() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
-                                <label for="email">Email</label>
+                                <label htmlFor="email">Email</label>
                             </FloatLabel>
                             <FloatLabel>
                                 <InputText
@@ -53,9 +132,11 @@ function Login() {
                                         setPassword(e.target.value)
                                     }
                                 />
-                                <label for="password">Mật khẩu</label>
+                                <label htmlFor="password">Mật khẩu</label>
                             </FloatLabel>
-                            <Button primary>Đăng nhập</Button>
+                            <Button primary onClick={fetchApi}>
+                                Đăng nhập
+                            </Button>
                         </div>
                     </div>
                 </div>

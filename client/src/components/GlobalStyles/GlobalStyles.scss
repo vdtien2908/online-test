@@ -214,3 +214,57 @@ input {
 .p-float-label:has(input:focus) label {
     font-size: 14px;
 }
+
+.p-toast .p-toast-message .p-toast-message-content {
+    padding: 14px;
+    align-items: center;
+    gap: 20px;
+}
+
+.p-toast-message + .p-toast-message {
+    margin-top: 20px;
+}
+
+.p-toast .p-toast-message.p-toast-message-info {
+    background: rgba(219, 234, 254, 0.7);
+    border: solid #3b82f6;
+    border-width: 0 0 0 6px;
+    color: #3b82f6;
+
+    svg {
+        color: #3b82f6;
+    }
+}
+
+.p-toast .p-toast-message.p-toast-message-warn {
+    background: rgba(255, 242, 226, 0.7);
+    border: solid #cc8925;
+    border-width: 0 0 0 6px;
+    color: #cc8925;
+
+    svg {
+        color: #cc8925;
+    }
+}
+
+.p-toast .p-toast-message.p-toast-message-success {
+    background: rgba(228, 248, 240, 0.7);
+    border: solid #1ea97c;
+    border-width: 0 0 0 6px;
+    color: #1ea97c;
+
+    svg {
+        color: #1ea97c;
+    }
+}
+
+.p-toast .p-toast-message.p-toast-message-error {
+    background: rgba(255, 231, 230, 0.7);
+    border: solid #ff5757;
+    border-width: 0 0 0 6px;
+    color: #ff5757;
+
+    svg {
+        color: #ff5757;
+    }
+}
