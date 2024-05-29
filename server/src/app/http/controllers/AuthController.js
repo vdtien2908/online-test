@@ -131,6 +131,7 @@ class AuthController {
     // [POST] /api/auth/refreshToken
     refreshAccessToken = asyncHandler(async (req, res) => {
         const cookie = req.cookies;
+        console.log(cookie.refreshToken);
         if (!cookie || !cookie.refreshToken) {
             return res.status(400).json({
                 success: false,
@@ -148,6 +149,8 @@ class AuthController {
             });
         }
 
+        console.log(cookie.refreshToken);
+        console.log(result);
         const user = await UserModel.findOne({
             where: {
                 id: result.id,
@@ -161,18 +164,6 @@ class AuthController {
                 message: 'User not found or refresh token is invalid',
             });
         }
-
-        const newRefreshToken = generateRefreshToken(user.id);
-
-        await UserModel.update(
-            { refreshToken: newRefreshToken },
-            { where: { id: user.id } }
-        );
-
-        res.cookie('refreshToken', newRefreshToken, {
-            httpOnly: true,
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 day
-        });
 
         return res.status(200).json({
             success: true,

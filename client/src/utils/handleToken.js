@@ -1,5 +1,5 @@
 import axios from 'axios';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 // Decode token
 const decodeToken = (token) => {
@@ -31,4 +31,4 @@ const refreshAccessToken = async () => {
     }
 };
 
-export { isTokenExpired, refreshAccessToken };
+export { isTokenExpired, refreshAccessToken, decodeToken };

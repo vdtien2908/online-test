@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
-import { isTokenExpired, refreshAccessToken } from '~/utils/checkToken';
+import { isTokenExpired, refreshAccessToken } from '~/utils/handleToken';
 
 const useAxiosWithAuth = () => {
     const [accessToken, setAccessToken] = useState(
         localStorage.getItem('accessToken')
-    );
-    const [refreshToken, setRefreshToken] = useState(
-        localStorage.getItem('refreshToken')
     );
 
     useEffect(() => {
@@ -38,7 +34,7 @@ const useAxiosWithAuth = () => {
         );
 
         return () => axios.interceptors.request.eject(interceptor);
-    }, [accessToken, refreshToken]);
+    }, [accessToken]);
 
     return axios;
 };

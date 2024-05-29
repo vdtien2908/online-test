@@ -1,18 +1,40 @@
 import { useState, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
+import * as request from '~/utils/httpRequest';
+
+import { isTokenExpired } from '~/utils/handleToken';
+
 function ProtectedRouter({ children }) {
-    const [accessToken, setAccessToken] = useState(() =>
-        localStorage.getItem('accessToken')
-    );
+    const [expiresRefreshToken, setExpiresRefreshToken] = useState(true);
+
     const location = useLocation();
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
-        setAccessToken(token);
+
+        // Handle token Expires
+        const fetchApi = async () => {
+            if (!token || isTokenExpired(token)) {
+                try {
+                    const req = await request.post('/api/auth/refreshToken');
+                    if (req && req.newAccessToken) {
+                        setExpiresRefreshToken(true);
+                        localStorage.setItem('accessToken', req.newAccessToken);
+                    } else {
+                        setExpiresRefreshToken(false);
+                    }
+                } catch (error) {
+                    console.error(error);
+                    setExpiresRefreshToken(false);
+                }
+            }
+        };
+
+        fetchApi();
     }, [location]);
 
-    return accessToken ? children : <Navigate to="/login" />;
+    return expiresRefreshToken ? children : <Navigate to="/login" />;
 }
 
 export default ProtectedRouter;

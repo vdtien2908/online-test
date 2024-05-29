@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     FaBars,
     FaEllipsisV,
@@ -18,7 +18,11 @@ import Tooltip from '~/components/Tooltip';
 import Image from '~/components/Image';
 import Menu from '~/components/Menu';
 
+// util
+import * as request from '~/utils/httpRequest';
+
 function Header({ onClick }) {
+    const navigate = useNavigate();
     const MENU_ITEMS = [
         {
             icon: <FaCogs />,
@@ -33,9 +37,19 @@ function Header({ onClick }) {
         {
             icon: <FaSignInAlt />,
             title: 'Đăng xuất',
-            to: '/demo',
+            onClick: async () => {
+                try {
+                    await request.get('/api/auth/logout');
+                    localStorage.removeItem('accessToken');
+                    navigate('/login');
+                } catch (error) {
+                    localStorage.removeItem('accessToken');
+                    navigate('/login');
+                }
+            },
         },
     ];
+
     return (
         <div className={clsx(style.header)}>
             <div className={clsx(style.headerLeft)}>

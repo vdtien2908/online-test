@@ -60,15 +60,6 @@ function Login() {
         }
     };
 
-    const showSuccess = () => {
-        toastRef.current.show({
-            severity: 'success',
-            summary: 'Cảnh báo',
-            detail: 'Đăng nhập thành công',
-            life: 3000,
-        });
-    };
-
     const showWarn = () => {
         toastRef.current.show({
             severity: 'warn',
