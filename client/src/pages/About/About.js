@@ -1,6 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useInView } from 'react-intersection-observer';
+import { useLocation } from 'react-router-dom';
 import {
     FaRightToBracket,
     FaRightLong,
@@ -12,6 +13,7 @@ import {
     FaFacebookMessenger,
 } from 'react-icons/fa6';
 import { Carousel } from 'primereact/carousel';
+import * as request from '~/utils/httpRequest';
 
 // Assets
 import style from './About.module.scss';
@@ -27,6 +29,27 @@ import Image from '~/components/Image';
 import Button from '~/components/Button';
 
 function About() {
+    const [isLogin, setLogin] = useState(false);
+
+    const location = useLocation();
+
+    useEffect(() => {
+        document.title = 'Đăng nhập';
+
+        const fetchApi = async () => {
+            try {
+                const req = await request.post('/api/auth/refreshToken');
+                if (req && req.newAccessToken) {
+                    setLogin(true);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchApi();
+    }, [location]);
+
     const comments = [
         {
             content:
@@ -84,13 +107,23 @@ function About() {
                             </p>
                         </div>
                         <div>
-                            <Button
-                                leftIcon={<FaRightToBracket />}
-                                primary
-                                to={'/login'}
-                            >
-                                Đăng nhập
-                            </Button>
+                            {isLogin ? (
+                                <Button
+                                    leftIcon={<FaRightToBracket />}
+                                    primary
+                                    to={'/dashboard'}
+                                >
+                                    Trang quản trị
+                                </Button>
+                            ) : (
+                                <Button
+                                    leftIcon={<FaRightToBracket />}
+                                    primary
+                                    to={'/login'}
+                                >
+                                    Đăng nhập
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </div>

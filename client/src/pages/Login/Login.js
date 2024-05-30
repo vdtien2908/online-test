@@ -24,7 +24,20 @@ function Login() {
 
     useEffect(() => {
         document.title = 'Đăng nhập';
-    }, []);
+
+        const fetchApi = async () => {
+            try {
+                const req = await request.post('/api/auth/refreshToken');
+                if (req && req.newAccessToken) {
+                    navigate('/dashboard');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchApi();
+    }, [navigate]);
 
     const fetchApi = async () => {
         if (!email || !password) {

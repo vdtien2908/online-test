@@ -149,8 +149,6 @@ class AuthController {
             });
         }
 
-        console.log(cookie.refreshToken);
-        console.log(result);
         const user = await UserModel.findOne({
             where: {
                 id: result.id,
