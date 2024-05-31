@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
             });
 
             AssignmentModel.belongsTo(models.UserModel, {
-                foreignKey: 'lecturerId',
+                foreignKey: 'userId',
             });
         }
     }

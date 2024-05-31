@@ -130,9 +130,6 @@ class SubjectController {
             where: { status: 0, subjectId: id },
         });
 
-        console.log(isDeleteSubject);
-        console.log(classList);
-
         if (isDeleteSubject && classList.length > 0) {
             await ClassModel.update(
                 { status: 1 },
