@@ -41,6 +41,8 @@ function About() {
                 const req = await request.post('/api/auth/refreshToken');
                 if (req && req.newAccessToken) {
                     setLogin(true);
+                } else {
+                    setLogin(false);
                 }
             } catch (error) {
                 console.error(error);

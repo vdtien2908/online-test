@@ -131,7 +131,6 @@ class AuthController {
     // [POST] /api/auth/refreshToken
     refreshAccessToken = asyncHandler(async (req, res) => {
         const cookie = req.cookies;
-        console.log(cookie.refreshToken);
         if (!cookie || !cookie.refreshToken) {
             return res.status(400).json({
                 success: false,
