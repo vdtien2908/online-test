@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useInView } from 'react-intersection-observer';
-import { useLocation } from 'react-router-dom';
 import {
-    FaRightToBracket,
+    // FaRightToBracket,
+    FaPhone,
     FaRightLong,
     FaDownLong,
     FaDiceD6,
@@ -13,7 +13,6 @@ import {
     FaFacebookMessenger,
 } from 'react-icons/fa6';
 import { Carousel } from 'primereact/carousel';
-import * as request from '~/utils/httpRequest';
 
 // Assets
 import style from './About.module.scss';
@@ -29,28 +28,24 @@ import Image from '~/components/Image';
 import Button from '~/components/Button';
 
 function About() {
-    const [isLogin, setLogin] = useState(false);
-
-    const location = useLocation();
+    const [showToTop, setShowToTop] = useState(false);
 
     useEffect(() => {
-        document.title = 'Đăng nhập';
-
-        const fetchApi = async () => {
-            try {
-                const req = await request.post('/api/auth/refreshToken');
-                if (req && req.newAccessToken) {
-                    setLogin(true);
-                } else {
-                    setLogin(false);
-                }
-            } catch (error) {
-                console.error(error);
+        const handleScroll = () => {
+            if (window.scrollY >= window.innerHeight / 2) {
+                setShowToTop(true);
+            } else {
+                setShowToTop(false);
             }
         };
 
-        fetchApi();
-    }, [location]);
+        window.addEventListener('scroll', handleScroll);
+
+        // Cleanup
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     const comments = [
         {
@@ -108,25 +103,31 @@ function About() {
                                 <sup style={{ fontSize: 14 }}>TEST</sup>
                             </p>
                         </div>
-                        <div>
-                            {isLogin ? (
-                                <Button
-                                    leftIcon={<FaRightToBracket />}
-                                    primary
-                                    to={'/dashboard'}
-                                >
-                                    Trang quản trị
-                                </Button>
-                            ) : (
-                                <Button
-                                    leftIcon={<FaRightToBracket />}
-                                    primary
-                                    to={'/login'}
-                                >
-                                    Đăng nhập
-                                </Button>
-                            )}
+                        <div className={clsx(style.contact_phone)}>
+                            <div className={clsx(style.icon)}>
+                                <FaPhone />
+                            </div>
+                            <p>(+84) 033 366 9832</p>
                         </div>
+                        {/* <div>
+                                    {isLogin ? (
+                                        <Button
+                                            leftIcon={<FaRightToBracket />}
+                                            primary
+                                            to={'/dashboard'}
+                                        >
+                                            Trang quản trị
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            leftIcon={<FaRightToBracket />}
+                                            primary
+                                            to={'/login'}
+                                        >
+                                            Đăng nhập
+                                        </Button>
+                                    )}
+                                </div> */}
                     </div>
                 </div>
             </div>
@@ -456,6 +457,12 @@ function About() {
                 </div>
             </footer>
             {/* /Footer */}
+
+            <div className={clsx(style.to_top, { [style.show]: showToTop })}>
+                <Button rightIcon={<FaRightLong />} primary to="/login">
+                    Bắt đầu
+                </Button>
+            </div>
         </div>
     );
 }

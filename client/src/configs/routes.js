@@ -2,19 +2,19 @@ const routes = {
     dashboard: { index: '/dashboard' },
     class: {
         index: '/class',
-        add: 'create',
+        create: 'create',
         update: 'update/:id',
         delete: 'delete/:id',
     },
     subject: {
         index: '/subject',
-        add: 'create',
+        create: 'create',
         update: 'update/:id',
         delete: 'delete/:id',
     },
     question: {
         index: '/question',
-        add: 'create',
+        create: 'create',
         update: 'update/:id',
         delete: 'delete/:id',
     },

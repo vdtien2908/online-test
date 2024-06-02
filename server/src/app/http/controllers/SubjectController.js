@@ -6,8 +6,28 @@ import { SubjectModel, ClassModel } from '../../models';
 class SubjectController {
     // [GET] /api/subjects
     index = asyncHandler(async (req, res) => {
+        const { search, sort } = req.query;
+
+        const whereConditions = {
+            status: 0,
+        };
+
+        if (search) {
+            whereConditions.subjectName = {
+                [Op.like]: `%${search}%`,
+            };
+        }
+
+        const sortOptions = [];
+        if (sort) {
+            const sortField = 'id';
+            const sortOrder = sort.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+            sortOptions.push([sortField, sortOrder]);
+        }
+
         const subjects = await SubjectModel.findAll({
-            where: { status: 0 },
+            where: whereConditions,
+            order: sortOptions,
         });
 
         res.status(200).json({
@@ -44,9 +64,9 @@ class SubjectController {
         // Validate input data
         if (
             !subjectName ||
-            !numberCredits ||
-            !numberOfTheoryLessons ||
-            !numberOfPracticalLessons
+            numberCredits === null ||
+            numberOfTheoryLessons === null ||
+            numberOfPracticalLessons === null
         ) {
             return res.status(400).json({
                 success: false,

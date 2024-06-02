@@ -137,7 +137,7 @@ a[href] {
             font-size: 16px;
             font-weight: 500;
             text-align: center;
-            background-color: rgba(6, 101, 208, 0.7);
+            background-color: #5093de;
             color: #fff;
 
             &:last-child {
@@ -241,7 +241,7 @@ input {
 }
 
 .p-toast .p-toast-message.p-toast-message-warn {
-    background: rgba(255, 242, 226, 0.7);
+    background: rgba(255, 242, 226);
     border: solid #cc8925;
     border-width: 0 0 0 6px;
     color: #cc8925;
@@ -252,7 +252,7 @@ input {
 }
 
 .p-toast .p-toast-message.p-toast-message-success {
-    background: rgba(228, 248, 240, 0.7);
+    background: rgba(228, 248, 240);
     border: solid #1ea97c;
     border-width: 0 0 0 6px;
     color: #1ea97c;
@@ -263,7 +263,7 @@ input {
 }
 
 .p-toast .p-toast-message.p-toast-message-error {
-    background: rgba(255, 231, 230, 0.7);
+    background: rgba(255, 231, 230);
     border: solid #ff5757;
     border-width: 0 0 0 6px;
     color: #ff5757;
@@ -271,4 +271,90 @@ input {
     svg {
         color: #ff5757;
     }
+}
+
+.p-datatable-emptymessage {
+    td {
+        text-align: center;
+    }
+}
+
+.loading-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.loading {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 3px solid var(--primary);
+    border-right: 3px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 0.5s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.header_dialog {
+    h2 {
+        font-size: 18px;
+        text-transform: uppercase;
+        font-weight: 500;
+        text-align: center;
+        padding: 10px 0;
+        color: var(--primary);
+    }
+}
+
+.form {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.form_action {
+    text-align: right;
+
+    button {
+        justify-content: center;
+    }
+}
+
+.input {
+    padding: 8px 12px;
+    width: 100%;
+}
+
+.input-row-2 {
+    display: flex;
+    gap: 20px;
+
+    span {
+        width: 50%;
+    }
+}
+
+.input-number {
+    width: 100% !important;
+
+    input {
+        padding: 8px 12px;
+        width: 100%;
+    }
+}
+
+.loading_relative {
+    position: relative;
+    height: 100vh;
 }

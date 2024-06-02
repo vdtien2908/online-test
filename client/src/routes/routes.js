@@ -4,7 +4,7 @@ import { Class } from '~/pages/Class';
 import { Assignment } from '~/pages/Assignment';
 import { Question } from '~/pages/Question';
 import { Role } from '~/pages/Role';
-import { Subject } from '~/pages/Subject';
+import { Subject, CreateSubject } from '~/pages/Subject';
 import { Test } from '~/pages/Test';
 import { User } from '~/pages/User';
 import { TakeATest } from '~/pages/TakeATest';
@@ -26,6 +26,12 @@ const privateRoutes = [
     {
         path: config.routes.subject.index,
         component: Subject,
+        children: [
+            {
+                path: config.routes.subject.create,
+                component: CreateSubject,
+            },
+        ],
     },
     {
         path: config.routes.question.index,

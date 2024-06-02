@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 
-import { UserModel } from '../../models';
+import { UserModel, RoleModel } from '../../models';
 import { generateAccessToken, generateRefreshToken } from '../middlewares/jwt';
 
 dotenv.config();
@@ -54,7 +54,14 @@ class AuthController {
             });
         }
 
-        const user = await UserModel.findOne({ where: { email } });
+        const user = await UserModel.findOne({
+            where: { email },
+            include: [
+                {
+                    model: RoleModel,
+                },
+            ],
+        });
         if (!user) {
             return res.status(401).json({
                 success: false,
@@ -112,6 +119,7 @@ class AuthController {
 
         const user = await UserModel.findOne({
             where: { id },
+            include: [{ model: RoleModel }],
             attributes: { exclude: ['refreshToken', 'password'] },
         });
 

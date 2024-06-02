@@ -1,4 +1,8 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Avatar } from 'primereact/avatar';
+import { Badge } from 'primereact/badge';
+
 import {
     FaBars,
     FaEllipsisV,
@@ -21,8 +25,25 @@ import Menu from '~/components/Menu';
 // util
 import * as request from '~/utils/httpRequest';
 
+// Hooks
+import useAxiosWithAuth from '~/hooks/useAxiosWithAuth';
+
 function Header({ onClick }) {
     const navigate = useNavigate();
+    const location = useLocation();
+    const axios = useAxiosWithAuth();
+
+    const [user, setUser] = useState(() => {
+        const userData = localStorage.getItem('user');
+        return userData ? JSON.parse(userData) : null;
+    });
+
+    const getFirstCharOfLastWord = (fullName) => {
+        const words = fullName.trim().split(' ');
+        const lastWord = words[words.length - 1];
+        return lastWord.charAt(0).toUpperCase();
+    };
+
     const MENU_ITEMS = [
         {
             icon: <FaCogs />,
@@ -41,14 +62,24 @@ function Header({ onClick }) {
                 try {
                     await request.get('/api/auth/logout');
                     localStorage.removeItem('accessToken');
+                    localStorage.removeItem('user');
                     navigate('/login');
                 } catch (error) {
                     localStorage.removeItem('accessToken');
+                    localStorage.removeItem('user');
                     navigate('/login');
                 }
             },
         },
     ];
+
+    useEffect(() => {
+        const fetchApi = async () => {
+            setUser(JSON.parse(localStorage.getItem('user')));
+        };
+
+        fetchApi();
+    }, [location]);
 
     return (
         <div className={clsx(style.header)}>
@@ -76,12 +107,19 @@ function Header({ onClick }) {
             <div className={clsx(style.headerRight)}>
                 <Menu items={MENU_ITEMS}>
                     <div className={clsx(style.avatar)}>
-                        <Image
-                            src="abc"
-                            className={style.avatar_img}
-                            alt="Avatar"
+                        <Avatar
+                            label={
+                                user
+                                    ? getFirstCharOfLastWord(user.fullName)
+                                    : 'A'
+                            }
+                            style={{
+                                backgroundColor: '#2196F3',
+                                color: '#ffffff',
+                            }}
+                            shape="circle"
                         />
-                        <p>Admin</p>
+                        <p>{user?.fullName || 'Admin'}</p>
                         <span>
                             <FaEllipsisV />
                         </span>

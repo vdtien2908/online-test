@@ -357,3 +357,74 @@
     opacity: 1;
     transform: translateY(0);
 }
+
+.contact_phone {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .icon {
+        background-color: var(--primary);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        svg {
+            font-size: 14px;
+            color: #fff;
+        }
+    }
+    p {
+        color: var(--text-color);
+        font-size: 18px;
+    }
+}
+
+.to_top {
+    background-color: var(--primary);
+    position: fixed;
+    bottom: 60px;
+    right: 60px;
+    border-radius: 6px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease;
+    animation: to_top 1000ms infinite;
+
+    &.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    &:hover {
+        opacity: 0.6;
+    }
+}
+
+@keyframes to_top {
+    0% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    33.3333% {
+        transform: translate3d(0, 0, 0) scale(0.9);
+    }
+    66.6666% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    100% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    0% {
+        box-shadow: 0 0 0 0px #0065f7, 0 0 0 0px #0065f7;
+    }
+    50% {
+        transform: scale(0.8);
+    }
+    100% {
+        box-shadow: 0 0 0 15px rgba(0, 210, 255, 0),
+            0 0 0 30px rgba(0, 210, 255, 0);
+    }
+}

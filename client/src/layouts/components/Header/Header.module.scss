@@ -64,9 +64,12 @@
     span {
         line-height: 0;
         font-size: 14px;
+
+        svg {
+            color: #99abb4;
+        }
     }
 
-    span,
     p {
         transition: all 0.3s ease;
         color: #99abb4;

@@ -10,6 +10,7 @@
         min-width: 320px;
         border-radius: 4px;
         font-size: 16px;
+        color: #4c566a;
 
         &:focus {
             border: 1px solid var(--primary);
@@ -26,4 +27,14 @@
     color: #777;
     user-select: none;
     pointer-events: none;
+}
+
+.icon_clear {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #777;
+    cursor: pointer;
 }

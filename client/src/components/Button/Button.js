@@ -9,7 +9,6 @@ function Button({
     href,
     primary,
     outline,
-    submit,
     edit,
     trash,
     destroy,
@@ -41,7 +40,7 @@ function Button({
             [style.outline]: outline,
             [style.edit]: edit,
             [style.delete]: trash,
-            [style.submit]: submit,
+            // [style.submit]: submit,
             [style.destroy]: destroy,
         },
         className

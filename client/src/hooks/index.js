@@ -1,1 +1,2 @@
-export { useDebounce as default } from './useDebounce';
+export { default as useDebounce } from './useDebounce';
+export { default as useAxiosWithAuth } from './useAxiosWithAuth';

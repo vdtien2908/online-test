@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+import * as request from '~/utils/httpRequest';
 import { isTokenExpired, refreshAccessToken } from '~/utils/handleToken';
 
 const useAxiosWithAuth = () => {
+    const navigate = useNavigate();
     const [accessToken, setAccessToken] = useState(
         localStorage.getItem('accessToken')
     );
@@ -20,10 +23,11 @@ const useAxiosWithAuth = () => {
                             'Authorization'
                         ] = `Bearer ${newAccessToken}`;
                     } else {
-                        // Handel when don't get access token
-                        console.error(
-                            'Failed to refresh access token, please log in again.'
-                        );
+                        // Xử lý khi không lấy được token mới
+                        await request.get('/api/auth/logout');
+                        localStorage.removeItem('accessToken');
+                        localStorage.removeItem('user');
+                        navigate('/login');
                     }
                 } else {
                     config.headers['Authorization'] = `Bearer ${accessToken}`;
@@ -34,7 +38,7 @@ const useAxiosWithAuth = () => {
         );
 
         return () => axios.interceptors.request.eject(interceptor);
-    }, [accessToken]);
+    }, [accessToken, navigate]);
 
     return axios;
 };
