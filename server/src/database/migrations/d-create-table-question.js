@@ -11,10 +11,10 @@ module.exports = {
             },
             content: Sequelize.STRING,
             lever: Sequelize.INTEGER,
-            chapterId: {
+            subjectId: {
                 type: Sequelize.INTEGER,
                 references: {
-                    model: 'chapters',
+                    model: 'subjects',
                     key: 'id',
                 },
             },

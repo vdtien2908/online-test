@@ -1,14 +1,8 @@
+import clsx from 'clsx';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { useState, useRef } from 'react';
-import {
-    FaPencil,
-    FaRegTrashCan,
-    FaEllipsisVertical,
-    FaCircleInfo,
-} from 'react-icons/fa6';
-import clsx from 'clsx';
-// import { Outlet } from 'react-router-dom';
+import { FaPencil, FaRegTrashCan, FaEllipsisVertical } from 'react-icons/fa6';
 import { useEffect } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
@@ -30,9 +24,11 @@ import Wrapper from '~/components/Wrapper';
 // Hooks
 import { useAxiosWithAuth, useDebounce } from '~/hooks';
 
+// Define base url
 const baseUrl = process.env.REACT_APP_BASE_URL;
 
 function Subject() {
+    // Hooks customs
     const axios = useAxiosWithAuth();
     const toastRef = useRef(null);
 
@@ -45,10 +41,14 @@ function Subject() {
 
     // Sort search
     const [selectedSubject, setSelectedSubject] = useState({
-        name: 'Mới nhất',
-        code: 'DESC',
+        name: 'Cũ nhất',
+        code: 'ASC',
     });
     const [searchValue, setSearchValue] = useState('');
+    const options = [
+        { name: 'Mới nhất', code: 'DESC' },
+        { name: 'Cũ nhất', code: 'ASC' },
+    ];
 
     // Debounce
     const debounce = useDebounce(searchValue, 500);
@@ -62,13 +62,8 @@ function Subject() {
     const [numberOfTheoryLessons, setNumberOfTheoryLessons] =
         useState(undefined);
 
-    const options = [
-        { name: 'Mới nhất', code: 'DESC' },
-        { name: 'Cũ nhất', code: 'ASC' },
-    ];
-
     // Init function
-    const fetchApi = async () => {
+    const init = async () => {
         try {
             setLoading(true);
             const req = await axios.get(`${baseUrl}/api/subjects`, {
@@ -80,13 +75,14 @@ function Subject() {
             setLoading(false);
             setSubjects(req.data.data);
         } catch (error) {
-            showError(error.response.data.message);
+            toastMessage('error', 'Lỗi', error.response.data.message);
         }
     };
 
     useEffect(() => {
-        fetchApi();
-    }, [selectedSubject, axios, debounce]);
+        init();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedSubject, debounce]);
 
     const handleEdit = (id) => {
         setVisibleEdit(true);
@@ -104,7 +100,7 @@ function Subject() {
                 setNumberOfPracticalLessons(subject.numberOfPracticalLessons);
                 setNumberOfTheoryLessons(subject.numberOfTheoryLessons);
             } catch (error) {
-                showError(error.response.data.message);
+                toastMessage('error', 'Lỗi', error.response.data.message);
                 setLoading(false);
             }
         })();
@@ -118,19 +114,6 @@ function Subject() {
     const actionBodyTemplate = (rowData, props) => {
         return (
             <div className="table_action">
-                <Tooltip content="Chi tiết">
-                    <span>
-                        <Button
-                            className="table_icon"
-                            outline
-                            show
-                            leftIcon={<FaCircleInfo />}
-                            onClick={() => {
-                                handleEdit(rowData.id);
-                            }}
-                        />
-                    </span>
-                </Tooltip>
                 <Tooltip content="Chỉnh sửa">
                     <span>
                         <Button
@@ -184,7 +167,11 @@ function Subject() {
             numberOfPracticalLessons === undefined ||
             numberOfTheoryLessons === undefined
         ) {
-            return showIsEmptyData();
+            return toastMessage(
+                'warn',
+                'Cảnh báo',
+                'Vui lòng nhập đầy đủ thông tin.'
+            );
         }
 
         const data = {
@@ -197,14 +184,16 @@ function Subject() {
             try {
                 setVisibleCreate(false);
                 setLoading(true);
-                const req = await axios.post(`${baseUrl}/api/subjects`, data);
+                await axios.post(`${baseUrl}/api/subjects`, data);
                 setLoading(false);
-                const newSubject = req.data.newSubject;
-                setSubjects((prevSubjects) => [...prevSubjects, newSubject]);
-                showSuccess(newSubject.subjectName);
-                setSearchValue('');
+                init();
+                toastMessage(
+                    'success',
+                    'Thành công',
+                    `Môn học ${subjectName} được thêm thành công.`
+                );
             } catch (error) {
-                showError(error.response.data.message);
+                toastMessage('error', 'Lỗi', error.response.data.message);
                 setVisibleCreate(false);
                 setLoading(false);
             }
@@ -219,33 +208,42 @@ function Subject() {
     // Handle Update
     const handleUpdate = (e) => {
         e.preventDefault();
+
         if (
             !subjectName ||
             numberCredits === undefined ||
             numberOfPracticalLessons === undefined ||
             numberOfTheoryLessons === undefined
         ) {
-            return showIsEmptyData();
+            return toastMessage(
+                'warn',
+                'Cảnh báo',
+                'Vui lòng nhập đầy đủ thông tin.'
+            );
         }
 
-        const data = {
-            subjectName,
-            numberCredits,
-            numberOfPracticalLessons,
-            numberOfTheoryLessons,
-        };
-
         (async () => {
+            const data = {
+                subjectName,
+                numberCredits,
+                numberOfPracticalLessons,
+                numberOfTheoryLessons,
+            };
+
             try {
                 setVisibleEdit(false);
                 setLoading(true);
                 await axios.put(`${baseUrl}/api/subjects/${subjectId}`, data);
                 setLoading(false);
-                fetchApi(); // Call function init
-                showSuccess(subjectName, 'cập nhật');
+                init(); // Call function init
+                toastMessage(
+                    'success',
+                    'Thành công',
+                    `Môn học ${subjectName} được cập nhật thành công.`
+                );
                 setSearchValue('');
             } catch (error) {
-                showError(error.response.data.message);
+                toastMessage('error', 'Lỗi', error.response.data.message);
                 setVisibleEdit(false);
                 setLoading(false);
             }
@@ -261,41 +259,27 @@ function Subject() {
                 setLoading(true);
                 await axios.delete(`${baseUrl}/api/subjects/${subjectId}`);
                 setLoading(false);
-                fetchApi(); // Call function init
-                showSuccess('', 'xoá');
+                init(); // Call function init
+                toastMessage(
+                    'success',
+                    'Thành công',
+                    'Môn học được xoá thành công!'
+                );
                 setSearchValue('');
             } catch (error) {
-                showError(error.response.data.message);
+                toastMessage('error', 'Lỗi', error.response.data.message);
                 setVisibleDelete(false);
                 setLoading(false);
             }
         })();
     };
 
-    const showIsEmptyData = () => {
+    const toastMessage = (type, title, message, life = 3000) => {
         toastRef.current.show({
-            severity: 'warn',
-            summary: 'Cảnh báo',
-            detail: 'Vui lòng nhập Đầy đủ thông tin!',
-            life: 3000,
-        });
-    };
-
-    const showSuccess = (subjectName, action = 'thêm') => {
-        toastRef.current.show({
-            severity: 'success',
-            summary: 'Thêm thành công',
-            detail: `Môn học ${subjectName} được ${action} thành công.`,
-            life: 3000,
-        });
-    };
-
-    const showError = (message) => {
-        toastRef.current.show({
-            severity: 'error',
-            summary: 'Lỗi',
+            severity: type,
+            summary: title,
             detail: `${message}`,
-            life: 3000,
+            life: life,
         });
     };
 
@@ -377,14 +361,14 @@ function Subject() {
                                 sortable
                             ></Column>
                             <Column
-                                field="numberOfPracticalLessons"
-                                header="Thực hành"
+                                field="numberOfTheoryLessons"
+                                header="Lý thuyết"
                                 bodyClassName="text-center"
                                 sortable
                             ></Column>
                             <Column
-                                field="numberOfTheoryLessons"
-                                header="Lý thuyết"
+                                field="numberOfPracticalLessons"
+                                header="Thực hành"
                                 bodyClassName="text-center"
                                 sortable
                             ></Column>

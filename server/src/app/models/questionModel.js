@@ -20,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'userId',
             });
 
-            QuestionModel.belongsTo(models.ChapterModel, {
-                foreignKey: 'chapterId',
+            QuestionModel.belongsTo(models.QuestionModel, {
+                foreignKey: 'subjectId',
             });
         }
     }
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             content: DataTypes.STRING,
             lever: DataTypes.INTEGER,
-            chapterId: DataTypes.INTEGER,
+            subjectId: DataTypes.INTEGER,
             userId: DataTypes.INTEGER,
             status: DataTypes.BOOLEAN,
         },

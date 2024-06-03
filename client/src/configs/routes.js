@@ -11,6 +11,7 @@ const routes = {
         create: 'create',
         update: 'update/:id',
         delete: 'delete/:id',
+        chapter: 'chapter/:id',
     },
     question: {
         index: '/question',
