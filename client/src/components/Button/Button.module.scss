@@ -49,6 +49,16 @@
     }
 }
 
+.show {
+    color: orange;
+    border-color: orange;
+
+    &:hover {
+        background-color: orange;
+        color: #fff;
+    }
+}
+
 .edit {
     color: #0298cf;
     border-color: #0298cf;
@@ -82,7 +92,13 @@
     color: #fff;
     background-color: #ed1c24;
     border-color: #ed1c24;
-    padding: 6px 20px;
+    padding: 10px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        opacity: 0.8;
+    }
 }
 
 .icon {

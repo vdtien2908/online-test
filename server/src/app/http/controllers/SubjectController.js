@@ -32,7 +32,7 @@ class SubjectController {
 
         res.status(200).json({
             success: subjects ? true : false,
-            data: subjects ? subjects : 'Can not get subject',
+            data: subjects ? subjects : 'Không lấy được dữ liệu môn học.',
         });
     });
 
@@ -48,7 +48,7 @@ class SubjectController {
 
         res.status(200).json({
             success: subject ? true : false,
-            data: subject ? subject : 'Can not get subject!',
+            data: subject ? subject : 'Không lấy được dữ liệu môn học!',
         });
     });
 
@@ -70,7 +70,7 @@ class SubjectController {
         ) {
             return res.status(400).json({
                 success: false,
-                message: 'Missing inputs',
+                message: 'Vui lòng nhập đầy đủ dữ liệu!',
             });
         }
 
@@ -85,7 +85,7 @@ class SubjectController {
         if (isCheckSubjectName.length > 0) {
             return res.status(401).json({
                 success: false,
-                message: 'The subject name already exists!',
+                message: 'Tên Môn học đã tồn tại!',
             });
         }
 
@@ -93,7 +93,9 @@ class SubjectController {
 
         res.status(200).json({
             success: newSubject ? true : false,
-            newSubject: newSubject ? newSubject : 'Can not created new subject',
+            newSubject: newSubject
+                ? newSubject
+                : 'Tạo môn học mới không thành công',
         });
     });
 
@@ -103,7 +105,7 @@ class SubjectController {
         const data = req.body;
 
         if (!id || Object.keys(data).length === 0) {
-            throw new Error('Missing inputs');
+            throw new Error('Vui lòng nhập đầy đủ dữ liệu!');
         }
 
         // Check subject exists
@@ -121,7 +123,7 @@ class SubjectController {
             if (isCheckSubjectName.length > 0) {
                 return res.status(401).json({
                     success: false,
-                    message: 'The subject name already exists!',
+                    message: 'Tên môn học đã tồn tại!',
                 });
             }
         }
@@ -133,8 +135,8 @@ class SubjectController {
         res.status(200).json({
             success: isUpdateSubject ? true : false,
             message: isUpdateSubject
-                ? 'Update subject successfully!'
-                : 'Can not updated subject!',
+                ? 'Cập nhật môn học thành công!'
+                : 'Không cập nhật được môn học!',
         });
     });
 
@@ -160,8 +162,8 @@ class SubjectController {
         res.status(200).json({
             success: isDeleteSubject ? true : false,
             message: isDeleteSubject
-                ? 'Deleted subject successfully!'
-                : 'Can not deleted subject!',
+                ? 'Xoá môn học thành công!'
+                : 'Không thể xoá môn học!',
         });
     });
 }

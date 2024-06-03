@@ -12,6 +12,8 @@ function Button({
     edit,
     trash,
     destroy,
+    submit,
+    show,
     onClick,
     children,
     leftIcon,
@@ -38,9 +40,10 @@ function Button({
         {
             [style.primary]: primary,
             [style.outline]: outline,
+            [style.show]: show,
             [style.edit]: edit,
             [style.delete]: trash,
-            // [style.submit]: submit,
+            [style.submit]: submit,
             [style.destroy]: destroy,
         },
         className

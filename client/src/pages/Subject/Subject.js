@@ -1,7 +1,12 @@
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { useState, useRef } from 'react';
-import { FaPencil, FaRegTrashCan, FaEllipsisVertical } from 'react-icons/fa6';
+import {
+    FaPencil,
+    FaRegTrashCan,
+    FaEllipsisVertical,
+    FaCircleInfo,
+} from 'react-icons/fa6';
 import clsx from 'clsx';
 // import { Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -25,66 +30,107 @@ import Wrapper from '~/components/Wrapper';
 // Hooks
 import { useAxiosWithAuth, useDebounce } from '~/hooks';
 
+const baseUrl = process.env.REACT_APP_BASE_URL;
+
 function Subject() {
     const axios = useAxiosWithAuth();
     const toastRef = useRef(null);
-    const [visible, setVisible] = useState(false);
-    const [selectedSubject, setSelectedSubject] = useState({
-        name: 'Cũ nhất',
-        code: 'ASC',
-    });
-    const [searchValue, setSearchValue] = useState('');
+
+    // Display state
+    const [visibleCreate, setVisibleCreate] = useState(false);
+    const [visibleEdit, setVisibleEdit] = useState(false);
+    const [visibleDelete, setVisibleDelete] = useState(false);
     const [loading, setLoading] = useState(false);
     const [subjects, setSubjects] = useState([]);
+
+    // Sort search
+    const [selectedSubject, setSelectedSubject] = useState({
+        name: 'Mới nhất',
+        code: 'DESC',
+    });
+    const [searchValue, setSearchValue] = useState('');
 
     // Debounce
     const debounce = useDebounce(searchValue, 500);
 
+    // Data row
+    const [subjectId, setSubjectID] = useState(undefined);
     const [subjectName, setSubjectName] = useState('');
     const [numberCredits, setNumberCredits] = useState(undefined);
     const [numberOfPracticalLessons, setNumberOfPracticalLessons] =
         useState(undefined);
     const [numberOfTheoryLessons, setNumberOfTheoryLessons] =
         useState(undefined);
+
     const options = [
         { name: 'Mới nhất', code: 'DESC' },
         { name: 'Cũ nhất', code: 'ASC' },
     ];
 
-    useEffect(() => {
-        const fetchApi = async () => {
-            try {
-                setLoading(true);
-                const req = await axios.get(
-                    `${process.env.REACT_APP_BASE_URL}/api/subjects`,
-                    {
-                        params: {
-                            search: debounce,
-                            sort: selectedSubject.code,
-                        },
-                    }
-                );
-                setLoading(false);
-                setSubjects(req.data.data);
-            } catch (error) {
-                console.log(error);
-            }
-        };
+    // Init function
+    const fetchApi = async () => {
+        try {
+            setLoading(true);
+            const req = await axios.get(`${baseUrl}/api/subjects`, {
+                params: {
+                    search: debounce,
+                    sort: selectedSubject.code,
+                },
+            });
+            setLoading(false);
+            setSubjects(req.data.data);
+        } catch (error) {
+            showError(error.response.data.message);
+        }
+    };
 
+    useEffect(() => {
         fetchApi();
     }, [selectedSubject, axios, debounce]);
 
     const handleEdit = (id) => {
-        console.log(id);
+        setVisibleEdit(true);
+        (async () => {
+            try {
+                setLoading(true);
+                const req = await axios.get(`${baseUrl}/api/subjects/${id}`);
+                setLoading(false);
+                const [subject] = req.data.data;
+
+                // Set data edit input
+                setSubjectID(subject.id);
+                setSubjectName(subject.subjectName);
+                setNumberCredits(subject.numberCredits);
+                setNumberOfPracticalLessons(subject.numberOfPracticalLessons);
+                setNumberOfTheoryLessons(subject.numberOfTheoryLessons);
+            } catch (error) {
+                showError(error.response.data.message);
+                setLoading(false);
+            }
+        })();
     };
 
     const handleDelete = (id) => {
-        console.log(id);
+        setSubjectID(id);
+        setVisibleDelete(true);
     };
 
     const actionBodyTemplate = (rowData, props) => {
         return (
             <div className="table_action">
+                <Tooltip content="Chi tiết">
+                    <span>
+                        <Button
+                            className="table_icon"
+                            outline
+                            show
+                            leftIcon={<FaCircleInfo />}
+                            onClick={() => {
+                                handleEdit(rowData.id);
+                            }}
+                        />
+                    </span>
+                </Tooltip>
                 <Tooltip content="Chỉnh sửa">
                     <span>
                         <Button
@@ -119,12 +165,14 @@ function Subject() {
         return props.rowIndex + 1;
     };
 
-    // Header dialog
-    const headerDialog = (
-        <div className="header_dialog">
-            <h2>Thêm môn học mới</h2>
-        </div>
-    );
+    // Header dialog create
+    const headerDialog = (title) => {
+        return (
+            <div className="header_dialog">
+                <h2>{title}</h2>
+            </div>
+        );
+    };
 
     // Handle Create
     const handleCreate = (e) => {
@@ -145,38 +193,83 @@ function Subject() {
             numberOfPracticalLessons,
             numberOfTheoryLessons,
         };
-        const fetchApi = async () => {
+        (async () => {
             try {
-                setVisible(false);
+                setVisibleCreate(false);
                 setLoading(true);
-                const req = await axios.post(
-                    `${process.env.REACT_APP_BASE_URL}/api/subjects`,
-                    data
-                );
+                const req = await axios.post(`${baseUrl}/api/subjects`, data);
                 setLoading(false);
                 const newSubject = req.data.newSubject;
                 setSubjects((prevSubjects) => [...prevSubjects, newSubject]);
                 showSuccess(newSubject.subjectName);
                 setSearchValue('');
             } catch (error) {
-                if (
-                    error.response.data.message ===
-                    'The subject name already exists!'
-                ) {
-                    showExists();
-                } else {
-                    showError();
-                }
-                setVisible(false);
+                showError(error.response.data.message);
+                setVisibleCreate(false);
                 setLoading(false);
             }
-        };
+        })();
 
-        fetchApi();
         setSubjectName('');
         setNumberCredits(undefined);
         setNumberOfPracticalLessons(undefined);
         setNumberOfTheoryLessons(undefined);
+    };
+
+    // Handle Update
+    const handleUpdate = (e) => {
+        e.preventDefault();
+        if (
+            !subjectName ||
+            numberCredits === undefined ||
+            numberOfPracticalLessons === undefined ||
+            numberOfTheoryLessons === undefined
+        ) {
+            return showIsEmptyData();
+        }
+
+        const data = {
+            subjectName,
+            numberCredits,
+            numberOfPracticalLessons,
+            numberOfTheoryLessons,
+        };
+
+        (async () => {
+            try {
+                setVisibleEdit(false);
+                setLoading(true);
+                await axios.put(`${baseUrl}/api/subjects/${subjectId}`, data);
+                setLoading(false);
+                fetchApi(); // Call function init
+                showSuccess(subjectName, 'cập nhật');
+                setSearchValue('');
+            } catch (error) {
+                showError(error.response.data.message);
+                setVisibleEdit(false);
+                setLoading(false);
+            }
+        })();
+    };
+
+    // Submit delete
+    const submitDelete = (e) => {
+        e.preventDefault();
+        (async () => {
+            try {
+                setVisibleDelete(false);
+                setLoading(true);
+                await axios.delete(`${baseUrl}/api/subjects/${subjectId}`);
+                setLoading(false);
+                fetchApi(); // Call function init
+                showSuccess('', 'xoá');
+                setSearchValue('');
+            } catch (error) {
+                showError(error.response.data.message);
+                setVisibleDelete(false);
+                setLoading(false);
+            }
+        })();
     };
 
     const showIsEmptyData = () => {
@@ -188,29 +281,20 @@ function Subject() {
         });
     };
 
-    const showExists = () => {
-        toastRef.current.show({
-            severity: 'error',
-            summary: 'Cảnh báo',
-            detail: 'Tên môn học đã tồn tại!',
-            life: 3000,
-        });
-    };
-
-    const showSuccess = (subjectName) => {
+    const showSuccess = (subjectName, action = 'thêm') => {
         toastRef.current.show({
             severity: 'success',
             summary: 'Thêm thành công',
-            detail: `Môn học ${subjectName} được thêm thành công.`,
+            detail: `Môn học ${subjectName} được ${action} thành công.`,
             life: 3000,
         });
     };
 
-    const showError = () => {
+    const showError = (message) => {
         toastRef.current.show({
             severity: 'error',
-            summary: 'Lỗi máy chủ',
-            detail: 'Lỗi máy chủ vui lòng thử lại sau',
+            summary: 'Lỗi',
+            detail: `${message}`,
             life: 3000,
         });
     };
@@ -226,7 +310,11 @@ function Subject() {
                         title="Danh sách môn học"
                         textButton="Thêm môn học"
                         onClick={() => {
-                            setVisible(true);
+                            setSubjectName('');
+                            setNumberCredits(undefined);
+                            setNumberOfPracticalLessons(undefined);
+                            setNumberOfTheoryLessons(undefined);
+                            setVisibleCreate(true);
                         }}
                     />
                     <div className="head_body">
@@ -310,13 +398,14 @@ function Subject() {
                 )}
                 {/* End body */}
             </Wrapper>
+            {/* Dialog  create */}
             <Dialog
-                header={headerDialog}
-                visible={visible}
+                header={headerDialog('Thêm môn học mới')}
+                visible={visibleCreate}
                 style={{ width: '50vw' }}
                 onHide={() => {
-                    if (!visible) return;
-                    setVisible(false);
+                    if (!visibleCreate) return;
+                    setVisibleCreate(false);
                 }}
                 draggable={false}
             >
@@ -378,7 +467,10 @@ function Subject() {
                         </FloatLabel>
                     </div>
                     <div className="form_action">
-                        <Button type="button" onClick={() => setVisible(false)}>
+                        <Button
+                            type="button"
+                            onClick={() => setVisibleCreate(false)}
+                        >
                             Huỷ
                         </Button>
                         <Button primary type="submit">
@@ -387,6 +479,118 @@ function Subject() {
                     </div>
                 </form>
             </Dialog>
+            {/* /Dialog  create */}
+
+            {/* Dialog edit */}
+            <Dialog
+                header={headerDialog('Cập nhật môn học')}
+                visible={visibleEdit}
+                style={{ width: '50vw' }}
+                onHide={() => {
+                    if (!visibleEdit) return;
+                    setVisibleEdit(false);
+                }}
+                draggable={false}
+            >
+                <form className="form" onSubmit={handleUpdate}>
+                    <FloatLabel>
+                        <InputText
+                            className="input"
+                            id="subjectName"
+                            value={subjectName}
+                            onChange={(e) => setSubjectName(e.target.value)}
+                        />
+                        <label htmlFor="subjectName">Tên môn học</label>
+                    </FloatLabel>
+                    <FloatLabel>
+                        <InputNumber
+                            className="input-number"
+                            id="numberCredits"
+                            value={numberCredits}
+                            onValueChange={(e) => setNumberCredits(e.value)}
+                            mode="decimal"
+                            showButtons
+                            min={1}
+                            max={10}
+                        />
+                        <label htmlFor="numberCredits">Số tín chỉ</label>
+                    </FloatLabel>
+                    <div className="input-row-2">
+                        <FloatLabel>
+                            <InputNumber
+                                className="input-number"
+                                id="numberOfTheoryLessons"
+                                value={numberOfTheoryLessons}
+                                onValueChange={(e) =>
+                                    setNumberOfTheoryLessons(e.value)
+                                }
+                                mode="decimal"
+                                min={30}
+                                max={100}
+                            />
+                            <label htmlFor="numberOfTheoryLessons">
+                                Số tiết lý thuyết
+                            </label>
+                        </FloatLabel>
+                        <FloatLabel>
+                            <InputNumber
+                                className="input-number"
+                                id="numberOfPracticalLessons"
+                                value={numberOfPracticalLessons}
+                                onValueChange={(e) =>
+                                    setNumberOfPracticalLessons(e.value)
+                                }
+                                mode="decimal"
+                                min={0}
+                                max={100}
+                            />
+                            <label htmlFor="numberOfPracticalLessons">
+                                Số tiết thực hành
+                            </label>
+                        </FloatLabel>
+                    </div>
+                    <div className="form_action">
+                        <Button
+                            type="button"
+                            onClick={() => setVisibleEdit(false)}
+                        >
+                            Huỷ
+                        </Button>
+                        <Button primary type="submit">
+                            Cập nhật
+                        </Button>
+                    </div>
+                </form>
+            </Dialog>
+            {/* /Dialog edit */}
+
+            {/* Dialog delete */}
+            <Dialog
+                header={headerDialog('Xoá môn học')}
+                visible={visibleDelete}
+                style={{ width: '400px' }}
+                onHide={() => {
+                    if (!visibleDelete) return;
+                    setVisibleDelete(false);
+                }}
+                draggable={false}
+            >
+                <form className="form" onSubmit={submitDelete}>
+                    <p>Bạn có chắc muốn xoá môn học này?</p>
+                    <div className="form_action">
+                        <Button
+                            type="button"
+                            onClick={() => setVisibleDelete(false)}
+                        >
+                            Huỷ
+                        </Button>
+                        <Button destroy type="submit">
+                            Xoá
+                        </Button>
+                    </div>
+                </form>
+            </Dialog>
+            {/* /Dialog delete */}
         </>
     );
 }
