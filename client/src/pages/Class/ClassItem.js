@@ -35,7 +35,7 @@ function ClassItem({ item, onClickAddUser, onClickEdit, onClickDelete }) {
         <div className={style.classItem}>
             <div className={clsx(style.classItem_top)}>
                 <p className={style.classItem_title}>{item.className}</p>
-                <Menu items={MENU_ITEMS} placement="bottom-end">
+                <Menu items={MENU_ITEMS} placement="bottom-end" offset>
                     <div className={style.classItem_action}>
                         <FaGear />
                     </div>

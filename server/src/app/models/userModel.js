@@ -41,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     UserModel.init(
         {
+            code: DataTypes.STRING,
             email: DataTypes.STRING,
             fullName: DataTypes.STRING,
             gender: DataTypes.BOOLEAN,

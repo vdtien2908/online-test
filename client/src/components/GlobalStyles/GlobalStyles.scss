@@ -84,13 +84,14 @@ a[href] {
 
 .head_body {
     display: flex;
+    align-items: center;
     gap: 8px;
     margin-bottom: 12px;
 }
 
 .dropdown {
     min-width: 150px;
-    padding: 6px 12px;
+    padding: 7px 12px;
     box-shadow: none;
 }
 
@@ -366,5 +367,5 @@ textarea {
     text-align: center;
     font-size: 18px;
     font-weight: 500;
-    color: var(--text-color);
+    color: #607d8b;
 }

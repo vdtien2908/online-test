@@ -8,7 +8,7 @@ import style from './Menu.module.scss';
 // Component
 import MenuItem from './MenuItem';
 
-function Menu({ children, items = [], placement = 'bottom-end' }) {
+function Menu({ children, items = [], placement = 'bottom-end', offset }) {
     const renderItem = () => {
         return items.map((item, key) => {
             return <MenuItem key={key} data={item} />;
@@ -20,16 +20,18 @@ function Menu({ children, items = [], placement = 'bottom-end' }) {
             trigger={'click'}
             placement={placement}
             interactive
-            popperOptions={{
-                modifiers: [
-                    {
-                        name: 'offset',
-                        options: {
-                            offset: [8, -6],
+            popperOptions={
+                offset && {
+                    modifiers: [
+                        {
+                            name: 'offset',
+                            options: {
+                                offset: [8, -6],
+                            },
                         },
-                    },
-                ],
-            }}
+                    ],
+                }
+            }
             render={(attrs) => (
                 <div tabIndex="-1" className={clsx(style.menu)}>
                     <ul>{renderItem()}</ul>

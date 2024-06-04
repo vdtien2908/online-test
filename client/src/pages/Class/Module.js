@@ -7,7 +7,7 @@ function Module({ data, onClickAddUser, onClickEdit, onClickDelete }) {
     return (
         <div className={clsx(style.module)}>
             {data.length === 0 && (
-                <h2 className="empty-data">Không có dữ liệu hiển thị.</h2>
+                <h2 className="empty-data">Không có dữ liệu</h2>
             )}
             {data.length > 0 && (
                 <div className={style.module_body}>

@@ -45,6 +45,7 @@ function Class() {
 
     // State
     const [loading, setLoading] = useState(false);
+    const [loadingSort, setLoadingSort] = useState(false);
     const [visibleCreate, setVisibleCreate] = useState(false);
     const [visibleEdit, setVisibleEdit] = useState(false);
     const [visibleDelete, setVisibleDelete] = useState(false);
@@ -77,7 +78,9 @@ function Class() {
     useEffect(() => {
         (async () => {
             try {
+                setLoadingSort(true);
                 const req = await axios.get(`${baseUrl}/api/subjects`);
+                setLoadingSort(false);
                 setSubjects(req.data.data);
             } catch (error) {
                 toastMessage('error', 'Lỗi', error.response.data.message);
@@ -287,14 +290,28 @@ function Class() {
                         }}
                     />
                     <div className="head_body">
-                        <Dropdown
-                            value={selectedSubject}
-                            onChange={(e) => setSelectedSubject(e.value)}
-                            options={subjects}
-                            optionLabel="subjectName"
-                            placeholder="Chọn môn"
-                            className="dropdown"
-                        />
+                        {loadingSort && (
+                            <div
+                                style={{
+                                    width: 150,
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Loading small />
+                            </div>
+                        )}
+                        {!loadingSort && (
+                            <Dropdown
+                                value={selectedSubject}
+                                onChange={(e) => setSelectedSubject(e.value)}
+                                options={subjects}
+                                optionLabel="subjectName"
+                                placeholder="Chọn môn"
+                                className="dropdown"
+                            />
+                        )}
                         <Search
                             value={searchValue}
                             placeholder="Tìm kiếm lớp..."
