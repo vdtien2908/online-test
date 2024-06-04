@@ -33,7 +33,7 @@ function ClassItem({ item }) {
     return (
         <div className={style.classItem}>
             <div className={clsx(style.classItem_top)}>
-                <p className={style.classItem_title}>{item.name}</p>
+                <p className={style.classItem_title}>{item.className}</p>
                 <Menu placement="bottom-start" items={MENU_ITEMS}>
                     <div className={style.classItem_action}>
                         <FaGear />
@@ -42,13 +42,16 @@ function ClassItem({ item }) {
             </div>
             <div className={clsx(style.classItem_body)}>
                 <p>
-                    <b>Môn:</b> {item.subject}
+                    <b>Môn:</b> {item.SubjectModel.subjectName}
                 </p>
                 <p className={style.member}>
-                    <b>Thành viên:</b> {item.member} người
+                    <b>Thành viên:</b> {item.totalMember} người
                 </p>
                 <p className={style.note}>
                     <b>Ghi chú:</b> {item.note}
+                </p>
+                <p className={style.note}>
+                    <b>Mã mời:</b> {item.invitationCode}
                 </p>
                 <div className={clsx(style.list_member)}>
                     <p>Thành viên</p>

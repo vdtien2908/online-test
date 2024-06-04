@@ -6,7 +6,6 @@ import {
     FaBook,
     FaPersonHarassing,
     FaRegFileLines,
-    FaPeopleGroup,
 } from 'react-icons/fa6';
 import { BiDetail } from 'react-icons/bi';
 import { Fragment } from 'react';
@@ -57,12 +56,6 @@ const dataSidebar = [
         title: 'Người dùng',
         path: config.routes.user.index,
         icon: <FaUserGroup />,
-        tag: 'Quản trị',
-    },
-    {
-        title: 'Nhóm Quyền',
-        path: config.routes.role.index,
-        icon: <FaPeopleGroup />,
         tag: 'Quản trị',
     },
 ];
