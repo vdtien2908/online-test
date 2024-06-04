@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import style from './Class.module.scss';
 
 import Menu from '~/components/Menu';
+import Tooltip from '~/components/Tooltip';
 
 import {
     FaGear,
@@ -12,29 +13,29 @@ import {
     FaRegTrashCan,
 } from 'react-icons/fa6';
 
-function ClassItem({ item }) {
+function ClassItem({ item, onClickAddUser, onClickEdit, onClickDelete }) {
     const MENU_ITEMS = [
         {
             icon: <FaPlus />,
             title: 'Thêm thành viên',
-            to: `/create/${item.id}`,
+            onClick: () => onClickAddUser(item.id),
         },
         {
             icon: <FaPencil />,
             title: 'Cập nhật lớp học',
-            to: `/update/${item.id}`,
+            onClick: () => onClickEdit(item.id),
         },
         {
             icon: <FaRegTrashCan />,
             title: 'Xoá lớp học',
-            to: `/delete/${item.id}`,
+            onClick: () => onClickDelete(item.id),
         },
     ];
     return (
         <div className={style.classItem}>
             <div className={clsx(style.classItem_top)}>
                 <p className={style.classItem_title}>{item.className}</p>
-                <Menu placement="bottom-start" items={MENU_ITEMS}>
+                <Menu items={MENU_ITEMS} placement="bottom-end">
                     <div className={style.classItem_action}>
                         <FaGear />
                     </div>
@@ -44,17 +45,21 @@ function ClassItem({ item }) {
                 <p>
                     <b>Môn:</b> {item.SubjectModel.subjectName}
                 </p>
-                <p className={style.member}>
+                <p className={clsx(style.member)}>
                     <b>Thành viên:</b> {item.totalMember} người
                 </p>
-                <p className={style.note}>
-                    <b>Ghi chú:</b> {item.note}
+                <p className={clsx(style.note)}>
+                    <Tooltip content={item.note}>
+                        <span>
+                            <b>Ghi chú:</b> {item.note}
+                        </span>
+                    </Tooltip>
                 </p>
-                <p className={style.note}>
+                <p className={clsx(style.code)}>
                     <b>Mã mời:</b> {item.invitationCode}
                 </p>
                 <div className={clsx(style.list_member)}>
-                    <p>Thành viên</p>
+                    <p>Chi tiết</p>
                     <FaArrowRight />
                 </div>
             </div>

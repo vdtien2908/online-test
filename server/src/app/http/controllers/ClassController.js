@@ -6,9 +6,29 @@ import { ClassModel, SubjectModel } from '../../models';
 class ClassController {
     // [GET] /api/class
     index = asyncHandler(async (req, res) => {
+        const { search, subjectId } = req.query;
+
+        const whereConditions = {
+            status: 0,
+        };
+
+        if (search) {
+            whereConditions.className = {
+                [Op.like]: `%${search}%`,
+            };
+        }
+
+        if (subjectId) {
+            whereConditions.subjectId = {
+                [Op.eq]: subjectId,
+            };
+        }
+
         const classList = await ClassModel.findAll({
-            where: { status: 0 },
-            include: [{ model: SubjectModel }],
+            where: whereConditions,
+            include: {
+                model: SubjectModel,
+            },
         });
 
         res.status(200).json({
@@ -24,6 +44,9 @@ class ClassController {
         const classList = await ClassModel.findAll({
             where: {
                 id,
+            },
+            include: {
+                model: SubjectModel,
             },
         });
 

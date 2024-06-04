@@ -107,6 +107,15 @@
     }
 }
 
+.note {
+    height: 30px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    cursor: pointer;
+}
+
 .text_center {
     text-align: center;
 }

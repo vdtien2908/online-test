@@ -360,3 +360,11 @@ textarea {
     position: relative;
     height: 100vh;
 }
+
+.empty-data {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-color);
+}

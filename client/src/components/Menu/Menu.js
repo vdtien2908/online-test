@@ -20,6 +20,16 @@ function Menu({ children, items = [], placement = 'bottom-end' }) {
             trigger={'click'}
             placement={placement}
             interactive
+            popperOptions={{
+                modifiers: [
+                    {
+                        name: 'offset',
+                        options: {
+                            offset: [8, -6],
+                        },
+                    },
+                ],
+            }}
             render={(attrs) => (
                 <div tabIndex="-1" className={clsx(style.menu)}>
                     <ul>{renderItem()}</ul>
