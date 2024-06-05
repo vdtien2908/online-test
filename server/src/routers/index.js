@@ -8,6 +8,7 @@ import chapterRouter from './chapterRouter';
 import questionRouter from './questionRouter';
 import answerRouter from './answerRouter';
 import assignmentRouter from './assignmentRouter';
+import userRouter from './userRouter';
 
 function initRoutes(app) {
     // Router authentication
@@ -18,6 +19,7 @@ function initRoutes(app) {
     app.use('/api/questions', verifyAccessToken, questionRouter);
     app.use('/api/answers', verifyAccessToken, answerRouter);
     app.use('/api/assignments', verifyAccessToken, assignmentRouter);
+    app.use('/api/users', verifyAccessToken, userRouter);
 
     // Handle error
     app.use(notFound);
