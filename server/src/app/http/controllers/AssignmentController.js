@@ -1,8 +1,44 @@
 import asyncHandler from 'express-async-handler';
+import { Op } from 'sequelize';
 
-import { AssignmentModel } from '../../models';
+import { AssignmentModel, UserModel, SubjectModel } from '../../models';
 
 class AssignmentController {
+    // [GET] /api/assignments
+    index = asyncHandler(async (req, res) => {
+        const { userName, subjectId } = req.query;
+
+        const whereConditions = {};
+        if (userName) {
+            whereConditions['$UserModel.fullName$'] = {
+                [Op.like]: `%${userName}%`,
+            };
+        }
+
+        if (subjectId) {
+            whereConditions['$AssignmentModel.subjectId$'] = subjectId;
+        }
+
+        const assignments = await AssignmentModel.findAll({
+            include: [
+                {
+                    model: UserModel,
+                    attributes: ['id', 'fullName'],
+                },
+                {
+                    model: SubjectModel,
+                    attributes: ['id', 'subjectName'],
+                },
+            ],
+            where: whereConditions,
+        });
+
+        res.status(200).json({
+            success: true,
+            data: assignments,
+        });
+    });
+
     // [POST] /api/assignments
     store = asyncHandler(async (req, res) => {
         const { userId, subjectId } = req.body;

@@ -76,6 +76,10 @@ function Class() {
     };
 
     useEffect(() => {
+        init();
+    }, [selectedSubject, debounce]);
+
+    useEffect(() => {
         (async () => {
             try {
                 setLoadingSort(true);
@@ -86,9 +90,7 @@ function Class() {
                 toastMessage('error', 'Lỗi', error.response.data.message);
             }
         })();
-
-        init();
-    }, [selectedSubject, debounce]);
+    }, []);
 
     const onclickEdit = (id) => {
         (async () => {
@@ -447,7 +449,7 @@ function Class() {
             </Dialog>
             {/* /Dialog  create */}
 
-            {/* Dialog  create */}
+            {/* Dialog  edit */}
             <Dialog
                 header={headerDialog('Cập nhật lớp học phần')}
                 visible={visibleEdit}
@@ -540,7 +542,7 @@ function Class() {
                     </div>
                 </form>
             </Dialog>
-            {/* /Dialog  create */}
+            {/* /Dialog  edit */}
 
             {/* Dialog delete */}
             <Dialog

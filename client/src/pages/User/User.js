@@ -10,11 +10,9 @@ import {
 import clsx from 'clsx';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { InputNumber } from 'primereact/inputnumber';
 import { FloatLabel } from 'primereact/floatlabel';
 import { Toast } from 'primereact/toast';
 import { Calendar } from 'primereact/calendar';
-import { addLocale } from 'primereact/api';
 
 // Style css
 import style from './User.module.scss';
@@ -49,7 +47,6 @@ function User() {
 
     // Data
     const [users, setUsers] = useState([]);
-    const [user, setUser] = useState({});
     const [fullName, setFullName] = useState(undefined);
     const [gender, setGender] = useState(undefined);
     const [role, setRole] = useState(undefined);
@@ -82,6 +79,7 @@ function User() {
 
     useEffect(() => {
         init();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedRole, debounce]);
 
     const onClickEdit = (id) => {
@@ -92,7 +90,6 @@ function User() {
                 const req = await axios.get(`${baseUrl}/api/users/${id}`);
                 setLoading(false);
                 const user = req.data.data;
-                setUser(user);
                 console.log(user);
 
                 // Set data edit input
