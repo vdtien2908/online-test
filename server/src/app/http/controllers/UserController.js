@@ -6,19 +6,33 @@ import { UserModel, RoleModel } from '../../models';
 class UserController {
     // [GET] /api/user
     index = asyncHandler(async (req, res) => {
+        const { search, roleId } = req.query;
+        const whereConditions = {
+            [Op.and]: [
+                {
+                    status: 0,
+                },
+                {
+                    '$RoleModel.RoleName$': {
+                        [Op.in]: ['sinh viên', 'giảng viên'],
+                    },
+                },
+            ],
+        };
+
+        if (search) {
+            whereConditions.fullName = {
+                [Op.like]: `%${search}%`,
+            };
+        }
+
+        if (roleId) {
+            whereConditions.roleId = {
+                [Op.eq]: roleId,
+            };
+        }
         const users = await UserModel.findAll({
-            where: {
-                [Op.and]: [
-                    {
-                        status: 0,
-                    },
-                    {
-                        '$RoleModel.RoleName$': {
-                            [Op.in]: ['sinh viên', 'giảng viên'],
-                        },
-                    },
-                ],
-            },
+            where: whereConditions,
             include: {
                 model: RoleModel,
                 attributes: ['RoleName'],
@@ -51,17 +65,15 @@ class UserController {
 
     // [POST] /api/users
     store = asyncHandler(async (req, res) => {
-        const { email, fullName, gender, dob, phoneNumber, password, roleId } =
-            req.body;
+        const { email, fullName, gender, dob, phoneNumber, roleId } = req.body;
 
         // Validate input data
         if (
             !email ||
             !fullName ||
-            !gender ||
+            gender === undefined ||
             !dob ||
             !phoneNumber ||
-            !password ||
             !roleId
         ) {
             return res.status(400).json({
@@ -90,6 +102,7 @@ class UserController {
         const randomSixDigits = Math.floor(100000 + Math.random() * 900000);
         const code = parseInt(`${lastTwoDigits}0${roleId}0${randomSixDigits}`);
         req.body.code = code;
+        req.body.password = '123456';
 
         const nesUser = await UserModel.create(req.body);
 

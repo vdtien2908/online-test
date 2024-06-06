@@ -4,8 +4,7 @@ import { FaPencil, FaRegTrashCan, FaEllipsisVertical } from 'react-icons/fa6';
 // Prime react component
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { useState, useRef } from 'react';
-import { useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
