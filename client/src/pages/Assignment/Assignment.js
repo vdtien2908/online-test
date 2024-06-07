@@ -38,18 +38,20 @@ function Assignment() {
     const [loading, setLoading] = useState(false);
     const [loadingSort, setLoadingSort] = useState(false);
     const [visibleCreate, setVisibleCreate] = useState(false);
-    const [visibleDelete, setVisibleDelette] = useState(false);
+    const [visibleDelete, setVisibleDelete] = useState(false);
 
     // Sort
     const [selectedSubjectSort, setSelectedSubjectSort] = useState({});
     const [searchValue, setSearchValue] = useState('');
 
     // Data
+    const [subjectId, setSubjectId] = useState(undefined);
+    const [userId, setUserId] = useState(undefined);
     const [subjects, setSubjects] = useState([]);
 
     const [selectedSubject, setSelectedSubject] = useState({});
     const [selectedUser, setSelectedUser] = useState({});
-    const [users, setUser] = useState([]);
+    const [users, setUsers] = useState([]);
     const [assignments, setAssignments] = useState([]);
 
     const debounce = useDebounce(searchValue, 500);
@@ -89,6 +91,82 @@ function Assignment() {
         })();
     }, [axios]);
 
+    // Onclick delete
+    const onClickDelete = (subjectId, userId) => {
+        setVisibleDelete(true);
+        setSubjectId(subjectId);
+        setUserId(userId);
+    };
+
+    // Handle create
+    const handleCreate = (e) => {
+        e.preventDefault();
+        if (
+            Object.keys(selectedSubject).length === 0 ||
+            Object.keys(selectedUser).length === 0
+        ) {
+            return toastMessage(
+                'warn',
+                'Cảnh báo',
+                'Vui lòng nhập đầy đủ dữ liệu'
+            );
+        }
+
+        (async () => {
+            try {
+                setVisibleCreate(false);
+                setLoading(true);
+                await axios.post(`${baseUrl}/api/assignments`, {
+                    subjectId: selectedSubject.id,
+                    userId: selectedUser.id,
+                });
+                setLoading(false);
+                toastMessage(
+                    'success',
+                    'Thành công',
+                    `Phân công ${selectedSubject.SubjectName} -  ${selectedUser.fullName} được thêm thành công`
+                );
+                init();
+            } catch (error) {
+                toastMessage('error', 'Lỗi', error.response.data.message);
+                setLoading(false);
+                setVisibleCreate(false);
+            }
+        })();
+
+        setSelectedSubject({});
+        setSelectedUser({});
+    };
+
+    // Handle delete
+    const handleDelete = (e) => {
+        e.preventDefault();
+        (async () => {
+            try {
+                setVisibleDelete(false);
+                setLoading(true);
+                await axios.delete(`${baseUrl}/api/assignments`, {
+                    params: {
+                        subjectId,
+                        userId,
+                    },
+                });
+                setLoading(false);
+                init(); // Call function init
+                toastMessage(
+                    'success',
+                    'Thành công',
+                    'Phân công được xoá thành công!'
+                );
+                setSearchValue('');
+            } catch (error) {
+                toastMessage('error', 'Lỗi', error.response.data.message);
+                setVisibleDelete(false);
+                setLoading(false);
+            }
+        })();
+    };
+
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="table_action">
@@ -99,6 +177,9 @@ function Assignment() {
                             outline
                             trash
                             leftIcon={<FaRegTrashCan />}
+                            onClick={() =>
+                                onClickDelete(rowData.subjectId, rowData.userId)
+                            }
                         />
                     </span>
                 </Tooltip>
@@ -137,7 +218,18 @@ function Assignment() {
     };
 
     const handleChangSubject = (subject) => {
-        console.log(subject);
+        (async () => {
+            try {
+                const req = await axios.get(
+                    `${baseUrl}/api/assignments/getUserNotAssignBySubjectId/${subject.id}`
+                );
+
+                setUsers(req.data.data);
+            } catch (error) {
+                toastMessage('error', 'Lỗi', error.response.data.message);
+            }
+        })();
+        setSelectedSubject(subject);
     };
 
     // Template content
@@ -278,7 +370,7 @@ function Assignment() {
                 }}
                 draggable={false}
             >
-                <form className="form">
+                <form className="form" onSubmit={handleCreate}>
                     <div className="input-row-2">
                         <FloatLabel>
                             <Dropdown
@@ -298,11 +390,11 @@ function Assignment() {
                                 value={selectedUser}
                                 onChange={(e) => setSelectedUser(e.value)}
                                 options={users}
-                                optionLabel="semester"
+                                optionLabel="fullName"
                                 placeholder="Chọn giảng viên"
                                 className="input-number dropdown"
                             />
-                            <label htmlFor="semester">Giảng viên</label>
+                            <label htmlFor="fullName">Giảng viên</label>
                         </FloatLabel>
                     </div>
 
@@ -320,6 +412,34 @@ function Assignment() {
                 </form>
             </Dialog>
             {/* /Dialog  create */}
+
+            {/* Dialog delete */}
+            <Dialog
+                header={headerDialog('Xoá phân công')}
+                visible={visibleDelete}
+                style={{ width: '400px' }}
+                onHide={() => {
+                    if (!visibleDelete) return;
+                    setVisibleDelete(false);
+                }}
+                draggable={false}
+            >
+                <form className="form" onSubmit={handleDelete}>
+                    <p>Bạn có chắc muốn xoá phân công học này?</p>
+                    <div className="form_action">
+                        <Button
+                            type="button"
+                            onClick={() => setVisibleDelete(false)}
+                        >
+                            Huỷ
+                        </Button>
+                        <Button destroy type="submit">
+                            Xoá
+                        </Button>
+                    </div>
+                </form>
+            </Dialog>
+            {/* /Dialog delete */}
         </>
     );
 }

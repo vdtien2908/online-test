@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 
 import { AssignmentModel, UserModel, SubjectModel } from '../../models';
 
@@ -39,6 +39,35 @@ class AssignmentController {
         });
     });
 
+    // [GET] /api/getUserBySubjectId
+    getUserBySubjectId = asyncHandler(async (req, res) => {
+        const { id } = req.params;
+
+        const result = await AssignmentModel.findAll({
+            where: {
+                subjectId: id,
+            },
+            attributes: ['userId'],
+        });
+
+        const userIds = result.map((record) => record.userId);
+
+        const users = await UserModel.findAll({
+            where: {
+                id: {
+                    [Op.not]: userIds,
+                },
+                roleId: 3,
+                status: 0,
+            },
+        });
+
+        res.status(200).json({
+            success: true,
+            data: users,
+        });
+    });
+
     // [POST] /api/assignments
     store = asyncHandler(async (req, res) => {
         const { userId, subjectId } = req.body;
@@ -63,17 +92,27 @@ class AssignmentController {
 
     // [DELETE] /api/assignments
     delete = asyncHandler(async (req, res) => {
-        const { id } = req.params;
-        const [isDeleteAssignment] = await AssignmentModel.update(
-            { status: 1 },
-            { where: { id } }
-        );
+        const { subjectId, userId } = req.query;
+
+        if (!subjectId || !userId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Không tìm thấy mã môn học hoặc mà người dùng.',
+            });
+        }
+
+        const deleteResult = await AssignmentModel.destroy({
+            where: { subjectId, userId },
+        });
+
+        const isDeleteAssignment =
+            deleteResult && deleteResult.affectedRows > 0;
 
         res.status(200).json({
-            success: isDeleteAssignment ? true : false,
+            success: isDeleteAssignment,
             message: isDeleteAssignment
-                ? 'Deleted assignment successfully!'
-                : 'Can not deleted assignment!',
+                ? 'Xoá phân công thành công!'
+                : 'Không thể xoá phân công!',
         });
     });
 }
