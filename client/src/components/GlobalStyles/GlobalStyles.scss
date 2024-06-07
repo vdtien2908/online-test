@@ -337,6 +337,7 @@ textarea {
 .input {
     padding: 8px 12px;
     width: 100%;
+    box-shadow: none;
 }
 
 .input-row-2 {
@@ -368,4 +369,40 @@ textarea {
     font-size: 18px;
     font-weight: 500;
     color: #607d8b;
+}
+
+// pick list
+.p-picklist .p-picklist-list {
+    border: 1px solid #e5e9f0;
+}
+
+.p-multiselect-panel {
+}
+
+.p-multiselect-header {
+    padding: 0 8px;
+}
+
+.p-multiselect-item {
+    padding: 4px 8px;
+
+    &:hover {
+        background-color: #d8dee9;
+        box-shadow: none;
+    }
+
+    .p-checkbox {
+        margin-right: 8px;
+    }
+}
+
+.p-multiselect-token {
+    padding: 2px 8px;
+    span {
+        padding-right: 4px;
+    }
+
+    & + & {
+        margin-left: 4px;
+    }
 }

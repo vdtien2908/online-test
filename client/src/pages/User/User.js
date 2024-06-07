@@ -568,37 +568,15 @@ function User() {
                         />
                         <label htmlFor="email">Địa chỉ email</label>
                     </FloatLabel>
-                    <div className="input-row-2">
-                        <FloatLabel>
-                            <InputText
-                                className="input"
-                                id="phoneNumber"
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                            />
-                            <label htmlFor="phoneNumber">Số điện thoại</label>
-                        </FloatLabel>
-                        <FloatLabel>
-                            <Dropdown
-                                value={role}
-                                onChange={(e) => setRole(e.value)}
-                                options={[
-                                    {
-                                        roleName: 'Sinh viên',
-                                        code: 2,
-                                    },
-                                    {
-                                        roleName: 'Giảng viên',
-                                        code: 3,
-                                    },
-                                ]}
-                                optionLabel="roleName"
-                                placeholder="Chọn quyền"
-                                className="input-number dropdown"
-                            />
-                            <label htmlFor="role">Phân quyền</label>
-                        </FloatLabel>
-                    </div>
+                    <FloatLabel>
+                        <InputText
+                            className="input"
+                            id="phoneNumber"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                        />
+                        <label htmlFor="phoneNumber">Số điện thoại</label>
+                    </FloatLabel>
                     <div className="input-row-2">
                         <FloatLabel>
                             <Calendar

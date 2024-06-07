@@ -8,9 +8,16 @@ import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { FloatLabel } from 'primereact/floatlabel';
 import { Calendar } from 'primereact/calendar';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { MultiSelect } from 'primereact/multiselect';
 
 // React icon
-import { FaFilterCircleXmark } from 'react-icons/fa6';
+import {
+    FaFilterCircleXmark,
+    FaEllipsisVertical,
+    FaRegTrashCan,
+} from 'react-icons/fa6';
 
 // Style css
 import style from './Class.module.scss';
@@ -23,6 +30,7 @@ import Wrapper from '~/components/Wrapper';
 import Dropdown from '~/components/Dropdown';
 import Loading from '~/components/Loading';
 import Button from '~/components/Button';
+import Tooltip from '~/components/Tooltip';
 
 // Hooks
 import { useAxiosWithAuth, useDebounce } from '~/hooks';
@@ -49,6 +57,7 @@ function Class() {
     const [visibleCreate, setVisibleCreate] = useState(false);
     const [visibleEdit, setVisibleEdit] = useState(false);
     const [visibleDelete, setVisibleDelete] = useState(false);
+    const [visibleStudents, setVisibleStudents] = useState(false);
 
     // Data rows
     const [modules, setModules] = useState([]);
@@ -58,6 +67,11 @@ function Class() {
     const [semester, setSemester] = useState(undefined);
     const [subject, setSubject] = useState(undefined);
     const [note, setNote] = useState(undefined);
+
+    // Student data
+    const [students, setStudents] = useState([]);
+    const [studentNoClass, setStudentNoClass] = useState([]);
+    const [selectedStudent, setSelectedStudent] = useState([]);
 
     const init = async () => {
         try {
@@ -109,21 +123,6 @@ function Class() {
                     code: module.semester,
                 });
                 setSubject(module.SubjectModel);
-            } catch (error) {
-                toastMessage('error', 'Lỗi', error.response.data.message);
-            }
-        })();
-    };
-
-    const onClickDelete = (id) => {
-        setVisibleDelete(true);
-        (async () => {
-            try {
-                setLoading(true);
-                const req = await axios.get(`${baseUrl}/api/class/${id}`);
-                setLoading(false);
-                const [module] = req.data.data;
-                setClassId(module.id);
             } catch (error) {
                 toastMessage('error', 'Lỗi', error.response.data.message);
             }
@@ -253,6 +252,108 @@ function Class() {
         setSearchValue('');
     };
 
+    // Onclick list show list students
+    const onClickStudents = async (id) => {
+        setVisibleStudents(true);
+        setClassId(id);
+
+        (async () => {
+            try {
+                const students = await axios.get(
+                    `${baseUrl}/api/class/getUserByClassId/${id}`
+                );
+
+                const studentNoClass = await axios.get(
+                    `${baseUrl}/api/class/getUserNotCLass/${id}`
+                );
+
+                setStudents(students.data.data);
+                setStudentNoClass(studentNoClass.data.data);
+            } catch (error) {
+                toastMessage('error', 'Lỗi', error.response.data.message);
+            }
+        })();
+    };
+
+    const handleAddStudent = async () => {
+        if (selectedStudent.length === 0) {
+            return toastMessage('warn', 'Cảnh báo', 'Vui lòng chọn sinh viên.');
+        }
+        (async () => {
+            try {
+                await axios.post(`${baseUrl}/api/class/addStudent/${classId}`, {
+                    selectedStudent,
+                });
+
+                (async () => {
+                    try {
+                        const students = await axios.get(
+                            `${baseUrl}/api/class/getUserByClassId/${classId}`
+                        );
+
+                        const studentNoClass = await axios.get(
+                            `${baseUrl}/api/class/getUserNotCLass/${classId}`
+                        );
+
+                        setStudents(students.data.data);
+                        setStudentNoClass(studentNoClass.data.data);
+                        setSelectedStudent([]);
+                        toastMessage(
+                            'success',
+                            'Thành công',
+                            'Thêm sinh viên thành công.'
+                        );
+                    } catch (error) {
+                        toastMessage(
+                            'error',
+                            'Lỗi',
+                            error.response.data.message
+                        );
+                    }
+                })();
+            } catch (error) {
+                toastMessage('error', 'Lỗi', error.response.data.message);
+            }
+        })();
+    };
+
+    const onClickDelete = (userId) => {
+        (async () => {
+            try {
+                await axios.delete(`${baseUrl}/api/class/deleteStudent`, {
+                    params: { classId, userId },
+                });
+                toastMessage(
+                    'success',
+                    'Thành công',
+                    'Xoá sinh viên thành công!'
+                );
+                (async () => {
+                    try {
+                        const students = await axios.get(
+                            `${baseUrl}/api/class/getUserByClassId/${classId}`
+                        );
+
+                        const studentNoClass = await axios.get(
+                            `${baseUrl}/api/class/getUserNotCLass/${classId}`
+                        );
+
+                        setStudents(students.data.data);
+                        setStudentNoClass(studentNoClass.data.data);
+                    } catch (error) {
+                        toastMessage(
+                            'error',
+                            'Lỗi',
+                            error.response.data.message
+                        );
+                    }
+                })();
+            } catch (error) {
+                toastMessage('error', 'Lỗi', error.response.data.message);
+            }
+        })();
+    };
+
     // Function handle notification
     const toastMessage = (type, title, message, life = 3000) => {
         toastRef.current.show({
@@ -271,6 +372,28 @@ function Class() {
                 <h2>{title}</h2>
             </div>
         );
+    };
+
+    const actionBodyTemplate = (rowData) => {
+        return (
+            <div className="table_action">
+                <Tooltip content="Xoá">
+                    <span>
+                        <Button
+                            className="table_icon"
+                            outline
+                            trash
+                            leftIcon={<FaRegTrashCan />}
+                            onClick={() => onClickDelete(rowData.id)}
+                        />
+                    </span>
+                </Tooltip>
+            </div>
+        );
+    };
+
+    const indexBodyTemplate = (data, props) => {
+        return props.rowIndex + 1;
     };
 
     return (
@@ -345,9 +468,11 @@ function Class() {
                 {!loading && (
                     <div className={style.body}>
                         <Module
+                            total={students.length}
                             data={modules}
                             onClickEdit={onclickEdit}
                             onClickDelete={onClickDelete}
+                            onClickStudents={onClickStudents}
                         />
                     </div>
                 )}
@@ -569,6 +694,83 @@ function Class() {
                         </Button>
                     </div>
                 </form>
+            </Dialog>
+            {/* /Dialog delete */}
+
+            {/* Dialog delete */}
+            <Dialog
+                header={headerDialog('Danh sách sinh viên')}
+                visible={visibleStudents}
+                style={{ width: '70vw' }}
+                onHide={() => {
+                    if (!visibleStudents) return;
+                    setVisibleStudents(false);
+                    init();
+                }}
+                draggable={false}
+            >
+                <div className={clsx(style.list_student)}>
+                    <div className={clsx(style.add_student)}>
+                        <div className={clsx(style.selected)}>
+                            <FloatLabel>
+                                <MultiSelect
+                                    value={selectedStudent}
+                                    onChange={(e) =>
+                                        setSelectedStudent(e.value)
+                                    }
+                                    options={studentNoClass}
+                                    optionLabel="fullName"
+                                    placeholder="Chọn sinh viên"
+                                    maxSelectedLabels={4}
+                                    className="input"
+                                    display="chip"
+                                />
+                                <label htmlFor="className">
+                                    Thêm sinh viên
+                                </label>
+                            </FloatLabel>
+                        </div>
+                        <div className={clsx(style.button)}>
+                            <Button primary onClick={handleAddStudent}>
+                                Thêm
+                            </Button>
+                        </div>
+                    </div>
+                    <DataTable
+                        value={students}
+                        showGridlines
+                        stripedRows
+                        paginator
+                        rowsPerPageOptions={[5, 10, 15, 20]}
+                        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                        rows={10}
+                        currentPageReportTemplate="Trang {currentPage} / {totalPages}"
+                        emptyMessage="Không có dữ liệu"
+                    >
+                        <Column
+                            body={indexBodyTemplate}
+                            header="#"
+                            bodyClassName="text-center"
+                        />
+                        <Column
+                            field="code"
+                            header="Mã sinh viên"
+                            bodyClassName="text-center"
+                            sortable
+                        ></Column>
+                        <Column
+                            field="fullName"
+                            header="Họ tên sinh viên"
+                            bodyClassName="text-center"
+                            sortable
+                        ></Column>
+                        <Column
+                            body={actionBodyTemplate}
+                            header={<FaEllipsisVertical />}
+                            bodyClassName="text-center"
+                        ></Column>
+                    </DataTable>
+                </div>
             </Dialog>
             {/* /Dialog delete */}
         </>

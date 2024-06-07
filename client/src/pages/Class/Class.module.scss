@@ -79,6 +79,7 @@
 }
 
 .list_member {
+    user-select: none;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -118,4 +119,27 @@
 
 .text_center {
     text-align: center;
+}
+
+.list_student {
+    padding: 20px;
+}
+.add_student {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+
+    .button {
+        width: 20%;
+
+        button {
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+        }
+    }
+
+    .selected {
+        width: 80%;
+    }
 }

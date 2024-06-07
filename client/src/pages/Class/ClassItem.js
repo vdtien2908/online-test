@@ -5,21 +5,10 @@ import style from './Class.module.scss';
 import Menu from '~/components/Menu';
 import Tooltip from '~/components/Tooltip';
 
-import {
-    FaGear,
-    FaArrowRight,
-    FaPlus,
-    FaPencil,
-    FaRegTrashCan,
-} from 'react-icons/fa6';
+import { FaGear, FaArrowRight, FaPencil, FaRegTrashCan } from 'react-icons/fa6';
 
-function ClassItem({ item, onClickAddUser, onClickEdit, onClickDelete }) {
+function ClassItem({ item, onClickEdit, onClickDelete, onClickStudents }) {
     const MENU_ITEMS = [
-        {
-            icon: <FaPlus />,
-            title: 'Thêm thành viên',
-            onClick: () => onClickAddUser(item.id),
-        },
         {
             icon: <FaPencil />,
             title: 'Cập nhật lớp học',
@@ -58,8 +47,11 @@ function ClassItem({ item, onClickAddUser, onClickEdit, onClickDelete }) {
                 <p className={clsx(style.code)}>
                     <b>Mã mời:</b> {item.invitationCode}
                 </p>
-                <div className={clsx(style.list_member)}>
-                    <p>Chi tiết</p>
+                <div
+                    className={clsx(style.list_member)}
+                    onClick={() => onClickStudents(item.id)}
+                >
+                    <p>Danh sách sinh viên</p>
                     <FaArrowRight />
                 </div>
             </div>
