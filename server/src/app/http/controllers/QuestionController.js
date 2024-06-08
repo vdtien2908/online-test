@@ -1,13 +1,43 @@
 import asyncHandler from 'express-async-handler';
 import { Op } from 'sequelize';
 
-import { QuestionModel } from '../../models';
+import { QuestionModel, SubjectModel } from '../../models';
 
 class QuestionController {
     // [GET] /api/questions
     index = asyncHandler(async (req, res) => {
+        const { subjectId, lever, search } = req.query;
+
+        const whereConditions = {
+            status: 0,
+        };
+
+        if (search) {
+            whereConditions.content = {
+                [Op.like]: `%${search}%`,
+            };
+        }
+
+        if (subjectId) {
+            whereConditions.subjectId = {
+                [Op.eq]: subjectId,
+            };
+        }
+
+        if (lever) {
+            whereConditions.lever = {
+                [Op.eq]: lever,
+            };
+        }
+
         const questions = await QuestionModel.findAll({
-            where: { status: 0 },
+            where: whereConditions,
+            include: [
+                {
+                    model: SubjectModel,
+                    attributes: ['subjectName'],
+                },
+            ],
         });
 
         res.status(200).json({
@@ -34,10 +64,10 @@ class QuestionController {
 
     // [POST] /api/questions
     store = asyncHandler(async (req, res) => {
-        const { content, lever, chapterId } = req.body;
+        const { content, lever, questionId } = req.body;
 
         // Validate input data
-        if (!content || !lever || !chapterId) {
+        if (!content || !lever || questionId) {
             return res.status(400).json({
                 success: false,
                 message: 'Missing inputs',

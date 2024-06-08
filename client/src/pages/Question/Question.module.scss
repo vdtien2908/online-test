@@ -1,0 +1,49 @@
+.answers {
+    border-top: 1px solid #ccc;
+    padding-top: 30px;
+
+    .add_answer {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+    }
+
+    .list_answer {
+        margin-top: 12px;
+
+        .answer {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .answer + .answer {
+            margin-top: 12px;
+        }
+
+        .label_radio {
+            margin-left: 14px;
+            user-select: none;
+            cursor: pointer;
+        }
+    }
+
+    .input {
+        width: 100%;
+    }
+
+    .action {
+        width: 110px;
+        text-align: center;
+
+        .button_container {
+            display: flex;
+        }
+
+        button {
+            min-width: auto;
+            width: 100%;
+            justify-content: center;
+        }
+    }
+}

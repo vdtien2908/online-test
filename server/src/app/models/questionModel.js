@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'userId',
             });
 
-            QuestionModel.belongsTo(models.QuestionModel, {
+            QuestionModel.belongsTo(models.SubjectModel, {
                 foreignKey: 'subjectId',
             });
         }
