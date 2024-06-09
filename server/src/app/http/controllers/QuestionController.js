@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { Op } from 'sequelize';
 
-import { QuestionModel, SubjectModel } from '../../models';
+import { QuestionModel, SubjectModel, AnswerModel } from '../../models';
 
 class QuestionController {
     // [GET] /api/questions
@@ -50,10 +50,16 @@ class QuestionController {
     show = asyncHandler(async (req, res) => {
         const { id } = req.params;
 
-        const questions = await QuestionModel.findAll({
+        const questions = await QuestionModel.findOne({
             where: {
                 id,
             },
+            include: [
+                {
+                    model: AnswerModel,
+                },
+                { model: SubjectModel },
+            ],
         });
 
         res.status(200).json({
@@ -109,10 +115,27 @@ class QuestionController {
     // [DELETE] /api/questions
     delete = asyncHandler(async (req, res) => {
         const { id } = req.params;
+
+        const answers = await AnswerModel.findAll({
+            where: {
+                questionId: {
+                    [Op.eq]: id,
+                },
+            },
+            attributes: ['id'],
+        });
+
         const [isDeleteQuestion] = await QuestionModel.update(
             { status: 1 },
             { where: { id } }
         );
+
+        if (answers.length > 0) {
+            await AnswerModel.update(
+                { status: 1 },
+                { where: { questionId: id } }
+            );
+        }
 
         res.status(200).json({
             success: isDeleteQuestion ? true : false,

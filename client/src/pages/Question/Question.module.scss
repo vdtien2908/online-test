@@ -1,8 +1,25 @@
 .answers {
-    border-top: 1px solid #ccc;
-    padding-top: 30px;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 4px;
+    position: relative;
+    margin-top: 12px;
+
+    .answer_tag {
+        border: 1px solid var(--primary);
+        background-color: #fff;
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        color: var(--primary);
+        position: absolute;
+        top: -16px;
+        left: 40px;
+        z-index: 99;
+    }
 
     .add_answer {
+        margin-top: 18px;
         display: flex;
         justify-content: space-between;
         gap: 16px;
@@ -10,11 +27,27 @@
 
     .list_answer {
         margin-top: 12px;
+        height: 130px;
+        overflow-y: auto;
 
         .answer {
+            padding: 0px 108px 0px 10px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             cursor: pointer;
+            position: relative;
+            border: 1px solid #ccc;
+
+            label {
+                width: 100%;
+                padding: 4px 0;
+            }
+
+            .wrap_edit_answer_button {
+                position: absolute;
+                right: 10px;
+            }
         }
 
         .answer + .answer {
@@ -46,4 +79,11 @@
             justify-content: center;
         }
     }
+}
+
+.action_button {
+    padding: 4px 12px;
+    justify-content: center;
+    min-width: auto;
+    margin-left: 12px;
 }

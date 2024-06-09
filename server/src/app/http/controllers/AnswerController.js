@@ -34,17 +34,26 @@ class AnswerController {
 
     // [POST] /api/answers
     store = asyncHandler(async (req, res) => {
-        const { content, isAnswer, questionId } = req.body;
+        const { questionId } = req.params;
+        const { answers } = req.body;
 
         // Validate input data
-        if (!content || !isAnswer || !questionId) {
+        if (answers.length === 0) {
             return res.status(400).json({
                 success: false,
                 message: 'Missing inputs',
             });
         }
 
-        const newAnswer = await AnswerModel.create(req.body);
+        const data = answers.map((answer) => {
+            return {
+                questionId: parseInt(questionId),
+                content: answer.content,
+                isAnswer: answer.isAnswer,
+            };
+        });
+
+        const newAnswer = await AnswerModel.bulkCreate(data);
 
         res.status(200).json({
             success: newAnswer ? true : false,
