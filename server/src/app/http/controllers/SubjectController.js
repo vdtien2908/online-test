@@ -1,7 +1,12 @@
 import asyncHandler from 'express-async-handler';
 import { Op } from 'sequelize';
 
-import { SubjectModel, ClassModel, AssignmentModel } from '../../models';
+import {
+    SubjectModel,
+    ClassModel,
+    AssignmentModel,
+    ClassDetailModel,
+} from '../../models';
 
 class SubjectController {
     // [GET] /api/subjects

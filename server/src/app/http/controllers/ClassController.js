@@ -40,6 +40,26 @@ class ClassController {
             };
         }
 
+        const classByStudents = await ClassDetailModel.findAll({
+            where: {
+                userId: id,
+            },
+            include: [
+                {
+                    model: ClassModel,
+                    attributes: ['subjectId'],
+                },
+            ],
+        });
+
+        const classIds = classByStudents.map((item) => item.dataValues.classId);
+
+        if (role === 2) {
+            whereConditions.id = {
+                [Op.in]: classIds,
+            };
+        }
+
         if (subjectId) {
             whereConditions.subjectId = {
                 [Op.eq]: subjectId,
