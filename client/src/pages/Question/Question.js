@@ -92,6 +92,8 @@ function Question() {
     };
 
     useEffect(() => {
+        document.title = 'Câu hỏi';
+
         (async () => {
             try {
                 setLoadingSort(true);
@@ -107,10 +109,13 @@ function Question() {
     }, [selectedSubjectSort, selectedLeverSort, debounce]);
 
     const onclickEdit = async (id) => {
-        setVisibleEdit(true);
         try {
+            setLoading(true);
             const req = await axios.get(`${baseUrl}/api/questions/${id}`);
+            setLoading(false);
+            setVisibleEdit(true);
             const question = req.data.data;
+            setQuestionId(question.id);
             setQuestion(question);
             setLever(optionLevers[question.lever - 1]);
             setSelectedSubject(question.SubjectModel);
@@ -132,6 +137,8 @@ function Question() {
         setContent(undefined);
         setVisibleEdit(false);
         setAnswers([]);
+        setAnswer('');
+        setIsUpdateAnswer(false);
     };
 
     // Handle create question
@@ -184,8 +191,46 @@ function Question() {
         setAnswers([]);
     };
 
-    // Submit delete
-    const submitDelete = (e) => {
+    // Handle update question
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        if (
+            Object.keys(selectedSubject).length === 0 ||
+            Object.keys(lever).length === 0 ||
+            content === undefined
+        ) {
+            return toastMessage(
+                'warn',
+                'Cảnh báo',
+                'Vui lòng nhập đầy đủ thông tin.'
+            );
+        }
+        setVisibleEdit(false);
+
+        try {
+            setLoading(true);
+            await axios.put(`${baseUrl}/api/questions/${questionId}`, {
+                subjectId: selectedSubject.id,
+                lever: lever.code,
+                content,
+            });
+            setLoading(false);
+            toastMessage(
+                'success',
+                'Thành công',
+                'Cập nhật câu hỏi thành công'
+            );
+            init();
+        } catch (error) {
+            toastMessage('error', 'Lỗi', error.response.data.message);
+            setLoading(false);
+        }
+
+        onclickHideUpdate();
+    };
+
+    // Handle delete delete
+    const handleDelete = (e) => {
         e.preventDefault();
         (async () => {
             try {
@@ -226,6 +271,104 @@ function Question() {
         setAnswers(updatedAnswers);
     };
 
+    const handleAnswerChangeFormUpdate = async (index) => {
+        const isAnswerCheck = answers.findIndex(
+            (item) => item.isAnswer === true
+        );
+
+        const updatedAnswers = [...answers];
+
+        if (isAnswerCheck !== -1) {
+            try {
+                await axios.put(
+                    `${baseUrl}/api/answers/${updatedAnswers[isAnswerCheck].id}`,
+                    {
+                        isAnswer: false,
+                    }
+                );
+            } catch (error) {
+                toastMessage('error', 'Lỗi', error.response.data.message);
+            }
+            updatedAnswers[isAnswerCheck].isAnswer = false;
+        }
+
+        updatedAnswers[index].isAnswer = true;
+        try {
+            await axios.put(
+                `${baseUrl}/api/answers/${updatedAnswers[index].id}`,
+                {
+                    isAnswer: true,
+                }
+            );
+            toastMessage(
+                'success',
+                'Thành công',
+                'Thay đổi đáp án đúng thành công.'
+            );
+        } catch (error) {
+            toastMessage('error', 'Lỗi', error.response.data.message);
+        }
+
+        setAnswers(updatedAnswers);
+    };
+
+    const handleAddAnswerFormUpdate = async () => {
+        if (!answer) {
+            return toastMessage(
+                'warn',
+                'Cảnh báo',
+                'Vui lòng nhập nội dung câu trả lời.'
+            );
+        }
+        try {
+            const req = await axios.post(
+                `${baseUrl}/api/answers/add/${questionId}`,
+                {
+                    content: answer,
+                    isAnswer: false,
+                }
+            );
+            setAnswer('');
+            setAnswers((prevAnswers) => [...prevAnswers, req.data.newAnswer]);
+            toastMessage(
+                'success',
+                'Thành công',
+                'Thêm câu trả lời thành công.'
+            );
+        } catch (error) {
+            toastMessage('error', 'Lỗi', error.response.data.message);
+        }
+    };
+
+    const onclickUpdateAnswerFormUpdate = (index) => {
+        setAnswer(answers[index].content);
+        setIsUpdateAnswer(true);
+        setIndexAnswer(index);
+    };
+
+    const handleUpdateAnswerFormUpdate = async () => {
+        try {
+            await axios.put(
+                `${baseUrl}/api/answers/${answers[indexAnswer].id}`,
+                {
+                    content: answer,
+                }
+            );
+            setAnswer('');
+            setIsUpdateAnswer(false);
+            const answerUpdate = [...answers];
+            answerUpdate[indexAnswer].content = answer;
+            setAnswers(answerUpdate);
+            toastMessage(
+                'success',
+                'Thành công',
+                'Cập nhật câu trả lời thành công.'
+            );
+        } catch (error) {
+            toastMessage('error', 'Lỗi', error.response.data.message);
+        }
+    };
+
     const closeUpdateAnswer = () => {
         setAnswer('');
         setIsUpdateAnswer(false);
@@ -260,6 +403,24 @@ function Question() {
             );
         }
         setAnswers(answers.filter((_, i) => i !== index));
+    };
+
+    const handleRemoveAnswerFormUpdate = async (index) => {
+        if (answers[index].isAnswer === true) {
+            return toastMessage(
+                'warn',
+                'Cảnh báo',
+                'Vui lòng chọn đáp án khác trước khi xoá đáp án này!'
+            );
+        }
+
+        try {
+            await axios.delete(`${baseUrl}/api/answers/${answers[index].id}`);
+            setAnswers(answers.filter((_, i) => i !== index));
+            toastMessage('success', 'Thành công', 'Xoá câu trả lời thành công');
+        } catch (error) {
+            toastMessage('error', 'Lỗi', error.response.data.message);
+        }
     };
 
     const toastMessage = (type, title, message, life = 3000) => {
@@ -337,21 +498,6 @@ function Question() {
             </div>
         );
     };
-
-    const renderHeader = () => {
-        return (
-            <span className="ql-formats">
-                <button className="ql-bold" aria-label="Bold"></button>
-                <button className="ql-italic" aria-label="Italic"></button>
-                <button
-                    className="ql-underline"
-                    aria-label="Underline"
-                ></button>
-            </span>
-        );
-    };
-
-    const header = renderHeader();
 
     return (
         <>
@@ -668,7 +814,7 @@ function Question() {
                 style={{ width: '50vw' }}
                 draggable={false}
             >
-                <form className="form">
+                <form className="form" onSubmit={handleUpdate}>
                     <div className="input-row-2">
                         <FloatLabel>
                             <Dropdown
@@ -737,7 +883,9 @@ function Question() {
                                         <Button
                                             primary
                                             type="button"
-                                            onClick={handleUpdateAnswer}
+                                            onClick={
+                                                handleUpdateAnswerFormUpdate
+                                            }
                                         >
                                             <FaCheck />
                                         </Button>
@@ -745,7 +893,7 @@ function Question() {
                                 ) : (
                                     <Button
                                         primary
-                                        onClick={handleAddAnswer}
+                                        onClick={handleAddAnswerFormUpdate}
                                         type="button"
                                     >
                                         <FaPlus />
@@ -761,15 +909,17 @@ function Question() {
                                         className={clsx(style.answer)}
                                     >
                                         <RadioButton
-                                            inputId={item.key}
+                                            inputId={item.id}
                                             name="answer"
                                             onChange={() =>
-                                                handleAnswerChange(item.key)
+                                                handleAnswerChangeFormUpdate(
+                                                    index
+                                                )
                                             }
                                             checked={item.isAnswer === true}
                                         />
                                         <label
-                                            htmlFor={item.key}
+                                            htmlFor={item.id}
                                             className={clsx(style.label_radio)}
                                         >
                                             {item.content}
@@ -787,7 +937,9 @@ function Question() {
                                                 edit
                                                 outline
                                                 onClick={() =>
-                                                    handleEditAnswer(index)
+                                                    onclickUpdateAnswerFormUpdate(
+                                                        index
+                                                    )
                                                 }
                                             >
                                                 <FaPencil />
@@ -798,7 +950,9 @@ function Question() {
                                                     style.action_button
                                                 )}
                                                 onClick={() =>
-                                                    handleRemoveAnswer(index)
+                                                    handleRemoveAnswerFormUpdate(
+                                                        index
+                                                    )
                                                 }
                                                 trash
                                                 outline
@@ -834,7 +988,7 @@ function Question() {
                 }}
                 draggable={false}
             >
-                <form className="form" onSubmit={submitDelete}>
+                <form className="form" onSubmit={handleDelete}>
                     <p>Bạn có chắc muốn xoá câu hỏi này?</p>
                     <div className="form_action">
                         <Button

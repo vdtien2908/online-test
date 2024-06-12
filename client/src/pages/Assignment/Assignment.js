@@ -74,6 +74,7 @@ function Assignment() {
     };
 
     useEffect(() => {
+        document.title = 'Phân công';
         init();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedSubjectSort, debounce]);

@@ -78,6 +78,8 @@ function User() {
     };
 
     useEffect(() => {
+        document.title = 'Người dùng';
+
         init();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedRole, debounce]);

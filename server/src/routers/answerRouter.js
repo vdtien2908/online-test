@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get('/', AnswerController.index);
 router.post('/:questionId', AnswerController.store);
+router.post('/add/:questionId', AnswerController.add);
 router.get('/:id', AnswerController.show);
 router.put('/:id', AnswerController.update);
 router.delete('/:id', AnswerController.delete);

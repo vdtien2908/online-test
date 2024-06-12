@@ -1,7 +1,12 @@
 import asyncHandler from 'express-async-handler';
 import { Op } from 'sequelize';
 
-import { QuestionModel, SubjectModel, AnswerModel } from '../../models';
+import {
+    QuestionModel,
+    SubjectModel,
+    AnswerModel,
+    AssignmentModel,
+} from '../../models';
 
 class QuestionController {
     // [GET] /api/questions
@@ -11,6 +16,31 @@ class QuestionController {
         const whereConditions = {
             status: 0,
         };
+
+        // Get role current user
+        const { role, id } = req.user;
+
+        const subjects = await AssignmentModel.findAll({
+            where: { userId: id },
+            attributes: ['subjectId'],
+        });
+
+        const subjectIds = subjects.map(
+            (subject) => subject.dataValues.subjectId
+        );
+
+        if (role === 3) {
+            if (subjectIds.length === 0) {
+                return res.status(200).json({
+                    success: true,
+                    data: [],
+                });
+            }
+
+            whereConditions.subjectId = {
+                [Op.in]: subjectIds,
+            };
+        }
 
         if (search) {
             whereConditions.content = {
@@ -57,6 +87,10 @@ class QuestionController {
             include: [
                 {
                     model: AnswerModel,
+                    where: {
+                        status: 0,
+                    },
+                    required: false,
                 },
                 { model: SubjectModel },
             ],

@@ -6,12 +6,14 @@ import {
     SubjectModel,
     ClassDetailModel,
     UserModel,
+    AssignmentModel,
 } from '../../models';
 
 class ClassController {
     // [GET] /api/class
     index = asyncHandler(async (req, res) => {
         const { search, subjectId } = req.query;
+        const { id, role } = req.user;
 
         const whereConditions = {
             status: 0,
@@ -20,6 +22,21 @@ class ClassController {
         if (search) {
             whereConditions.className = {
                 [Op.like]: `%${search}%`,
+            };
+        }
+
+        const subjects = await AssignmentModel.findAll({
+            where: { userId: id },
+            attributes: ['subjectId'],
+        });
+
+        const subjectIds = subjects.map(
+            (subject) => subject.dataValues.subjectId
+        );
+
+        if (role === 3) {
+            whereConditions.subjectId = {
+                [Op.in]: subjectIds,
             };
         }
 

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // import { Outlet, useNavigate } from 'react-router-dom';
 
 // Style css
@@ -13,6 +13,10 @@ import Search from '~/components/Search';
 import TestItem from './TestItem';
 
 function Test() {
+    useEffect(() => {
+        document.title = 'Đề kiểm tra';
+    }, []);
+
     const options = [
         { name: 'Chưa mở', code: 'NY' },
         { name: 'Đang mở', code: 'RM' },

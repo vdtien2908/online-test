@@ -1,10 +1,15 @@
 import clsx from 'clsx';
+import { useEffect } from 'react';
+
 import { FaCircleQuestion, FaUserGroup, FaBook } from 'react-icons/fa6';
 
 // style css
 import style from './Home.module.scss';
 
 function Home() {
+    useEffect(() => {
+        document.title = 'Tổng quan';
+    }, []);
     return (
         <div className={clsx(style.card)}>
             <div className={clsx(style.card_item)}>

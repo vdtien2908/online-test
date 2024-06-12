@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { Op } from 'sequelize';
 
-import { SubjectModel, ClassModel } from '../../models';
+import { SubjectModel, ClassModel, AssignmentModel } from '../../models';
 
 class SubjectController {
     // [GET] /api/subjects
@@ -25,14 +25,31 @@ class SubjectController {
             sortOptions.push([sortField, sortOrder]);
         }
 
-        const subjects = await SubjectModel.findAll({
+        const { role, id } = req.user;
+
+        const subjects = await AssignmentModel.findAll({
+            where: { userId: id },
+            attributes: ['subjectId'],
+        });
+
+        const subjectIds = subjects.map(
+            (subject) => subject.dataValues.subjectId
+        );
+
+        if (role === 3) {
+            whereConditions.id = {
+                [Op.in]: subjectIds,
+            };
+        }
+
+        const result = await SubjectModel.findAll({
             where: whereConditions,
             order: sortOptions,
         });
 
         res.status(200).json({
-            success: subjects ? true : false,
-            data: subjects ? subjects : 'Không lấy được dữ liệu môn học.',
+            success: result ? true : false,
+            data: result ? result : 'Không lấy được dữ liệu môn học.',
         });
     });
 

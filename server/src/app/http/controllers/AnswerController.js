@@ -61,6 +61,31 @@ class AnswerController {
         });
     });
 
+    // [POST] /api/answers/add:/questionId
+    add = asyncHandler(async (req, res) => {
+        const { questionId } = req.params;
+        const { content, isAnswer } = req.body;
+        if (!content || isAnswer === undefined) {
+            return res.status(400).json({
+                success: false,
+                message: 'Missing inputs',
+            });
+        }
+
+        const data = {
+            questionId,
+            content,
+            isAnswer,
+        };
+
+        const newAnswer = await AnswerModel.create(data);
+
+        res.status(200).json({
+            success: newAnswer ? true : false,
+            newAnswer: newAnswer ? newAnswer : 'Can not created new answer',
+        });
+    });
+
     // [PUT] /api/answers
     update = asyncHandler(async (req, res) => {
         const { id } = req.params;

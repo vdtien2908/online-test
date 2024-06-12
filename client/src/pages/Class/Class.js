@@ -94,6 +94,7 @@ function Class() {
     }, [selectedSubject, debounce]);
 
     useEffect(() => {
+        document.title = 'Lớp học';
         (async () => {
             try {
                 setLoadingSort(true);
