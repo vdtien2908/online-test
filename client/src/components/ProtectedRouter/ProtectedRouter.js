@@ -1,11 +1,9 @@
-import { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
 import * as request from '~/utils/httpRequest';
 
 import { isTokenExpired } from '~/utils/handleToken';
-
-const UserContext = createContext();
 
 function ProtectedRouter({ children }) {
     const [expiresRefreshToken, setExpiresRefreshToken] = useState(true);
