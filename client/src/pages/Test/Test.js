@@ -1,9 +1,16 @@
 import clsx from 'clsx';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 // import { Outlet, useNavigate } from 'react-router-dom';
 
 // Style css
 import style from './Test.module.scss';
+
+// React prime
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { InputNumber } from 'primereact/inputnumber';
+import { FloatLabel } from 'primereact/floatlabel';
+import { Toast } from 'primereact/toast';
 
 // Component
 import TopPage from '~/components/TopPage';
@@ -11,10 +18,36 @@ import Wrapper from '~/components/Wrapper/Wrapper';
 import Dropdown from '~/components/Dropdown';
 import Search from '~/components/Search';
 import TestItem from './TestItem';
+import Loading from '~/components/Loading';
+
+// Hooks
+import { useDebounce, useAxiosWithAuth } from '~/hooks';
+
+const baseUrl = process.env.REACT_APP_BASE_URL;
 
 function Test() {
+    const axios = useAxiosWithAuth();
+    const toastRef = useRef(null);
+
+    // State display
     useEffect(() => {
         document.title = 'Đề kiểm tra';
+    }, []);
+
+    // Data
+    const [tests, setTests] = useState([]);
+
+    const init = async () => {
+        try {
+            const req = await axios.get(`${baseUrl}/api/tests`);
+            setTests(req.data.data);
+        } catch (error) {
+            toastMessage('error', 'Lỗi', error.response.data.message);
+        }
+    };
+
+    useEffect(() => {
+        init();
     }, []);
 
     const options = [
@@ -24,8 +57,19 @@ function Test() {
         { name: 'Tất cả', code: 'IST' },
     ];
     const [selectedTest, setSelectedTest] = useState(null);
+
+    const toastMessage = (type, title, message, life = 3000) => {
+        toastRef.current.show({
+            severity: type,
+            summary: title,
+            detail: `${message}`,
+            life: life,
+        });
+    };
+
     return (
         <Wrapper>
+            <Toast ref={toastRef} />
             {/* Start Head  */}
             <div className={style.head}>
                 <TopPage title="Danh sách đề thi" textButton="Tạo đề thi" />
@@ -52,10 +96,13 @@ function Test() {
 
             <div className={clsx(style.body)}>
                 <div className={clsx(style.list_test)}>
-                    <TestItem pending />
+                    {tests.map((test, index) => {
+                        return <TestItem key={index} data={test} approved />;
+                    })}
+                    {/* <TestItem pending />
                     <TestItem approved />
                     <TestItem cancel />
-                    <TestItem pending />
+                    <TestItem pending /> */}
                 </div>
                 <div className={clsx(style.note_status)}>
                     <ul>

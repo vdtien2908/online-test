@@ -11,7 +11,7 @@ import Button from '~/components/Button';
 // Router
 // import routes from '~/configs/routes';
 
-function TestItem({ pending, approved, cancel }) {
+function TestItem({ pending, approved, cancel, data }) {
     const items = [
         {
             label: 'Delete',
@@ -47,6 +47,24 @@ function TestItem({ pending, approved, cancel }) {
             },
         },
     ];
+
+    const formattedDate = (input) => {
+        let date = new Date(input);
+        let formattedDate = date.toLocaleString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
+
+        return formattedDate;
+    };
+
+    const startTime = formattedDate(data.startTime);
+    const endTime = formattedDate(data.endTime);
+
     return (
         <div
             className={clsx(style.test_item, {
@@ -56,19 +74,32 @@ function TestItem({ pending, approved, cancel }) {
             })}
         >
             <div className={clsx(style.test_title)}>
-                <h2>Đề thi 100 câu</h2>
+                <h2>{data.title}</h2>
             </div>
             <div className={clsx(style.test_assignment)}>
                 <FaBook />
-                <p>Giao cho lớp KTPM</p>
+                <p>
+                    Môn {data.subjectName} Lớp{' '}
+                    <b>
+                        {data.AssignExamQuestionModels[0].ClassModel.className}
+                    </b>
+                </p>
             </div>
             <div className={clsx(style.test_duration)}>
                 <FaBusinessTime />
-                <p>Diễn ra từ 6h20 5/5/2024 tới 8h20 6/5/2024</p>
+                <p>Thời gian thi: {data.examTime} phút</p>
+            </div>
+            <div className={clsx(style.test_duration)}>
+                <FaBusinessTime />
+                <p>Thời gian mở: {startTime}</p>
+            </div>
+            <div className={clsx(style.test_duration)}>
+                <FaBusinessTime />
+                <p>Thời gian đóng: {endTime}</p>
             </div>
             <div className={clsx(style.btn_test_start)}>
                 {approved && (
-                    <Button primary to={'/take-a-test/1'}>
+                    <Button primary to={`/take-a-test/${data.id}`}>
                         Bắt đầu làm bài
                     </Button>
                 )}

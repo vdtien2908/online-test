@@ -8,6 +8,7 @@ import {
 import { RadioButton } from 'primereact/radiobutton';
 import { Dialog } from 'primereact/dialog';
 import React, { useState, useRef, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 // Style css
 import style from './TakeATest.module.scss';
@@ -16,6 +17,9 @@ import style from './TakeATest.module.scss';
 import Button from '~/components/Button';
 
 function TakeATest() {
+    let { id } = useParams();
+    console.log(id);
+
     const questions = [
         {
             id: 1,

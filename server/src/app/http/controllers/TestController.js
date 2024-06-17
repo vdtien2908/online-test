@@ -1,6 +1,6 @@
 import asyncHandle from 'express-async-handler';
 
-import { TestModel } from '../../models';
+import { TestModel, ClassModel, AssignExamQuestionModel } from '../../models';
 
 class TestController {
     // [GET] /api/tests
@@ -9,6 +9,12 @@ class TestController {
             where: {
                 status: 0,
             },
+            include: [
+                {
+                    model: AssignExamQuestionModel,
+                    include: [{ model: ClassModel }],
+                },
+            ],
         });
 
         res.status(200).json({
