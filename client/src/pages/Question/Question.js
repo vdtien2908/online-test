@@ -14,7 +14,6 @@ import {
 
 // React Prime
 import { Dialog } from 'primereact/dialog';
-import { Editor } from 'primereact/editor';
 import { FloatLabel } from 'primereact/floatlabel';
 import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
@@ -63,7 +62,6 @@ function Question() {
     ];
 
     // Data
-    const [question, setQuestion] = useState({});
     const [questions, setQuestions] = useState([]);
     const [subjects, setSubjects] = useState([]);
     // Row data
@@ -116,7 +114,6 @@ function Question() {
             setVisibleEdit(true);
             const question = req.data.data;
             setQuestionId(question.id);
-            setQuestion(question);
             setLever(optionLevers[question.lever - 1]);
             setSelectedSubject(question.SubjectModel);
             setAnswers(question.AnswerModels);

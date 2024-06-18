@@ -8,7 +8,7 @@
     background-color: #fff;
     box-shadow: var(--shadow);
     padding: 10px 10px 10px 20px;
-    border-radius: 8px;
+    border-radius: 4px;
     position: relative;
 }
 
@@ -17,15 +17,15 @@
 }
 
 .test_item.pending {
-    border-left: 3px solid var(--primary-color);
+    border-left: 10px solid var(--primary-color);
 }
 
 .test_item.approved {
-    border-left: 3px solid orangered;
+    border-left: 10px solid orangered;
 }
 
 .test_item.cancel {
-    border-left: 3px solid #ccc;
+    border-left: 10px solid #ccc;
 }
 
 .test_title {

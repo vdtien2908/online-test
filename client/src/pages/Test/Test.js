@@ -27,7 +27,11 @@ const baseUrl = process.env.REACT_APP_BASE_URL;
 
 function Test() {
     const axios = useAxiosWithAuth();
+
     const toastRef = useRef(null);
+
+    // State display
+    const [loading, setLoading] = useState(false);
 
     // State display
     useEffect(() => {
@@ -39,7 +43,9 @@ function Test() {
 
     const init = async () => {
         try {
+            setLoading(true);
             const req = await axios.get(`${baseUrl}/api/tests`);
+            setLoading(false);
             setTests(req.data.data);
         } catch (error) {
             toastMessage('error', 'Lỗi', error.response.data.message);
@@ -56,7 +62,13 @@ function Test() {
         { name: 'Đã đóng', code: 'LDN' },
         { name: 'Tất cả', code: 'IST' },
     ];
+
+    const subjects = [
+        { name: 'Giải tích 1', code: 'NY' },
+        { name: 'Đại số tuyến tính', code: 'RM' },
+    ];
     const [selectedTest, setSelectedTest] = useState(null);
+    const [selectedSubject, setSelectedSubject] = useState(null);
 
     const toastMessage = (type, title, message, life = 3000) => {
         toastRef.current.show({
@@ -75,6 +87,14 @@ function Test() {
                 <TopPage title="Danh sách đề thi" textButton="Tạo đề thi" />
                 <div className="head_body">
                     <Dropdown
+                        value={selectedSubject}
+                        onChange={(e) => setSelectedSubject(e.value)}
+                        options={subjects}
+                        optionLabel="name"
+                        placeholder="Chọn môn"
+                        className="dropdown"
+                    />
+                    <Dropdown
                         value={selectedTest}
                         onChange={(e) => setSelectedTest(e.value)}
                         options={options}
@@ -92,54 +112,74 @@ function Test() {
                 </div>
             </div>
             {/* End Head  */}
-            {/* Start body */}
 
-            <div className={clsx(style.body)}>
-                <div className={clsx(style.list_test)}>
-                    {tests.map((test, index) => {
-                        return <TestItem key={index} data={test} approved />;
-                    })}
-                    {/* <TestItem pending />
-                    <TestItem approved />
-                    <TestItem cancel />
-                    <TestItem pending /> */}
+            {/* Start body */}
+            {loading && (
+                <div className="loading-container">
+                    <Loading />
                 </div>
-                <div className={clsx(style.note_status)}>
-                    <ul>
-                        <li>
-                            <div
-                                className={clsx(
-                                    style.status_color,
-                                    style.pending
-                                )}
-                            ></div>
-                            <div className={clsx(style.status_text)}>
-                                Chưa mở
-                            </div>
-                        </li>
-                        <li>
-                            <div
-                                className={clsx(
-                                    style.status_color,
-                                    style.approved
-                                )}
-                            ></div>
-                            <div className={clsx(style.status_text)}>Đã mở</div>
-                        </li>
-                        <li>
-                            <div
-                                className={clsx(
-                                    style.status_color,
-                                    style.cancel
-                                )}
-                            ></div>
-                            <div className={clsx(style.status_text)}>
-                                Đã đóng
-                            </div>
-                        </li>
-                    </ul>
+            )}
+
+            {!loading && (
+                <div className={clsx(style.body)}>
+                    <div className={clsx(style.list_test)}>
+                        {tests.map((test, index) => {
+                            const classList = test.AssignExamQuestionModels.map(
+                                (item) => {
+                                    return {
+                                        className: item.ClassModel.className,
+                                    };
+                                }
+                            );
+
+                            return (
+                                <TestItem
+                                    key={index}
+                                    data={test}
+                                    classList={classList}
+                                />
+                            );
+                        })}
+                    </div>
+                    <div className={clsx(style.note_status)}>
+                        <ul>
+                            <li>
+                                <div
+                                    className={clsx(
+                                        style.status_color,
+                                        style.pending
+                                    )}
+                                ></div>
+                                <div className={clsx(style.status_text)}>
+                                    Chưa mở
+                                </div>
+                            </li>
+                            <li>
+                                <div
+                                    className={clsx(
+                                        style.status_color,
+                                        style.approved
+                                    )}
+                                ></div>
+                                <div className={clsx(style.status_text)}>
+                                    Đã mở
+                                </div>
+                            </li>
+                            <li>
+                                <div
+                                    className={clsx(
+                                        style.status_color,
+                                        style.cancel
+                                    )}
+                                ></div>
+                                <div className={clsx(style.status_text)}>
+                                    Đã đóng
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            )}
             {/* End body */}
         </Wrapper>
     );

@@ -376,9 +376,6 @@ textarea {
     border: 1px solid #e5e9f0;
 }
 
-.p-multiselect-panel {
-}
-
 .p-multiselect-header {
     padding: 0 8px;
 }
@@ -405,4 +402,9 @@ textarea {
     & + & {
         margin-left: 4px;
     }
+}
+
+.p-inputswitch {
+    width: 48px;
+    height: 25px;
 }

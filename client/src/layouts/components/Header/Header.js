@@ -1,16 +1,11 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Avatar } from 'primereact/avatar';
-import { Badge } from 'primereact/badge';
-
-import {
-    FaBars,
-    FaEllipsisV,
-    FaCogs,
-    FaKey,
-    FaSignInAlt,
-} from 'react-icons/fa';
+import { FaEllipsisV, FaCogs, FaKey, FaSignInAlt } from 'react-icons/fa';
 import clsx from 'clsx';
+
+// React prime
+import { InputSwitch } from 'primereact/inputswitch';
 
 import config from '~/configs';
 
@@ -19,19 +14,15 @@ import style from './Header.module.scss';
 
 // Component
 import Tooltip from '~/components/Tooltip';
-import Image from '~/components/Image';
 import Menu from '~/components/Menu';
 
 // util
 import * as request from '~/utils/httpRequest';
 
-// Hooks
-import useAxiosWithAuth from '~/hooks/useAxiosWithAuth';
-
 function Header({ onClick }) {
     const navigate = useNavigate();
     const location = useLocation();
-    const axios = useAxiosWithAuth();
+    const [checked, setChecked] = useState(false);
 
     const [user, setUser] = useState(() => {
         const userData = localStorage.getItem('user');
@@ -94,14 +85,16 @@ function Header({ onClick }) {
                 {/* /Logo */}
 
                 {/* Toggle sidebar button */}
-                <Tooltip content="Thu gọn">
-                    <span
-                        onClick={onClick}
-                        className={clsx(style.toggleSidebar)}
-                    >
-                        <FaBars />
-                    </span>
+                <Tooltip content={'Thu/mở menu'}>
+                    <div style={{ lineHeight: 0 }}>
+                        <InputSwitch
+                            checked={checked}
+                            onChange={(e) => setChecked(e.value)}
+                            onClick={onClick}
+                        />
+                    </div>
                 </Tooltip>
+
                 {/* /Toggle sidebar button */}
             </div>
             <div className={clsx(style.headerRight)}>
