@@ -85,7 +85,7 @@ function Header({ onClick }) {
                 {/* /Logo */}
 
                 {/* Toggle sidebar button */}
-                <Tooltip content={'Thu/mở menu'}>
+                <Tooltip content={'Thu/mở sidebar'}>
                     <div style={{ lineHeight: 0 }}>
                         <InputSwitch
                             checked={checked}

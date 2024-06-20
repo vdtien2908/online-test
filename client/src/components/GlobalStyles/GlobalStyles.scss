@@ -408,3 +408,19 @@ textarea {
     width: 48px;
     height: 25px;
 }
+
+.p-tag {
+    padding: 4px 8px;
+
+    &.p-tag-warning {
+        background-color: #f97316;
+    }
+
+    &.p-tag-primary {
+        background-color: #06b6d4;
+    }
+
+    &.p-tag-danger {
+        background-color: #ef4444;
+    }
+}

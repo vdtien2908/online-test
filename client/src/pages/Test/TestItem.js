@@ -16,39 +16,18 @@ import Button from '~/components/Button';
 // Router
 // import routes from '~/configs/routes';
 
-function TestItem({ pending, approved, cancel, data, classList }) {
+function TestItem({ data, classList, onclickDelete, onClickShow }) {
     const items = [
         {
             label: 'Delete',
             icon: 'pi pi-trash',
-            command: () => {
-                // toast.current.show({
-                //     severity: 'error',
-                //     summary: 'Delete',
-                //     detail: 'Data Deleted',
-                // });
-            },
-        },
-        {
-            label: 'Update',
-            icon: 'pi pi-pencil',
-            command: () => {
-                // toast.current.show({
-                //     severity: 'success',
-                //     summary: 'Update',
-                //     detail: 'Data Updated',
-                // });
-            },
+            command: () => onclickDelete(data.id),
         },
         {
             label: 'Show',
             icon: 'pi pi-external-link',
             command: () => {
-                // toast.current.show({
-                //     severity: 'success',
-                //     summary: 'Update',
-                //     detail: 'Data Updated',
-                // });
+                onClickShow(data.id);
             },
         },
     ];
@@ -121,11 +100,12 @@ function TestItem({ pending, approved, cancel, data, classList }) {
                     <p>Thời gian đóng: {endTime}</p>
                 </div>
                 <div className={clsx(style.btn_test_start)}>
-                    {approved && (
-                        <Button primary to={`/take-a-test/${data.id}`}>
-                            Bắt đầu làm bài
-                        </Button>
-                    )}
+                    {currentTime > formatTime(startTime) &&
+                        currentTime < formatTime(endTime) && (
+                            <Button primary to={`/take-a-test/${data.id}`}>
+                                Bắt đầu làm bài
+                            </Button>
+                        )}
                 </div>
                 <div className={clsx(style.test_action)}>
                     <SpeedDial
