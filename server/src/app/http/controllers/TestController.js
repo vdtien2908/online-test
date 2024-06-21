@@ -8,6 +8,8 @@ import {
     AssignExamQuestionModel,
     QuestionModel,
     TestDetailModel,
+    ResultDetailModel,
+    ResultModel,
 } from '../../models';
 
 class TestController {
@@ -55,6 +57,9 @@ class TestController {
                 {
                     model: AssignExamQuestionModel,
                     include: [{ model: ClassModel }],
+                },
+                {
+                    model: ResultModel,
                 },
             ],
         });
@@ -260,6 +265,49 @@ class TestController {
             message: isUpdate
                 ? 'Cập nhật đề thi thành công'
                 : 'Cập nhật đề thi thất bại!',
+        });
+    });
+
+    // [POST] /api/tests/submit
+    submit = asyncHandle(async (req, res) => {
+        const { id } = req.params;
+        const userId = req.user.id;
+        const numberOfTabSwitch = 0;
+        const {
+            testScore,
+            examTime,
+            testTime,
+            numberOfCorrectAnswer,
+            resultTest,
+        } = req.body;
+
+        const data = {
+            testScore,
+            examTime,
+            testTime,
+            numberOfCorrectAnswer,
+            numberOfTabSwitch,
+            testId: id,
+            userId,
+        };
+
+        const newResult = await ResultModel.create(data);
+
+        const resultId = newResult.id;
+
+        const detailResults = resultTest.map((item) => {
+            return {
+                resultId: resultId,
+                questionId: item.question,
+                selectedAnswer: item.answerId,
+            };
+        });
+
+        await ResultDetailModel.bulkCreate(detailResults);
+
+        res.status(200).json({
+            success: true,
+            message: 'Nộp bài kiểm tra thành công',
         });
     });
 

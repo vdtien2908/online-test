@@ -10,8 +10,8 @@ module.exports = {
                 type: Sequelize.INTEGER,
             },
             testScore: Sequelize.INTEGER,
-            examTime: Sequelize.DATE,
-            testTime: Sequelize.TIME,
+            examTime: Sequelize.INTEGER,
+            testTime: Sequelize.DATE,
             numberOfCorrectAnswer: Sequelize.INTEGER,
             numberOfTabSwitch: Sequelize.INTEGER,
             testId: {

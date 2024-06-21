@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { FaChartBar } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
 import {
     FaCircleQuestion,
     FaUserGroup,
@@ -16,92 +17,77 @@ import config from '~/configs';
 
 import style from './Sidebar.module.scss';
 
-const dataSidebar = [
-    {
-        title: 'Tổng quan',
-        path: config.routes.dashboard.index,
-        icon: <FaChartBar />,
-    },
-    {
-        title: 'Lớp học phần',
-        path: config.routes.class.index,
-        icon: <BiDetail />,
-        tag: 'Học phần',
-    },
-    {
-        title: 'Môn học',
-        path: config.routes.subject.index,
-        icon: <FaBook />,
-        tag: 'Học phần',
-    },
-    {
-        title: 'Câu hỏi',
-        path: config.routes.question.index,
-        icon: <FaCircleQuestion />,
-        tag: 'Kiểm tra',
-    },
-    {
-        title: 'Đề kiểm tra',
-        path: config.routes.test.index,
-        icon: <FaRegFileLines />,
-        tag: 'Kiểm tra',
-    },
-    {
-        title: 'Phân công',
-        path: config.routes.assignment.index,
-        icon: <FaPersonHarassing />,
-        tag: 'Quản trị',
-    },
-    {
-        title: 'Người dùng',
-        path: config.routes.user.index,
-        icon: <FaUserGroup />,
-        tag: 'Quản trị',
-    },
-];
-
 function Sidebar({ isActive }) {
-    let currentTag = '';
+    const [user, setUser] = useState(() => {
+        return JSON.parse(localStorage.getItem('user'));
+    });
+
     return (
         <div className={clsx(style.sidebar, { [style.active]: isActive })}>
             {/* Menu */}
             <Menu isActive={isActive}>
-                {dataSidebar.map((item, index) => {
-                    if (item.tag && currentTag !== item.tag) {
-                        currentTag = item.tag;
-                        return (
-                            <Fragment key={index}>
-                                <span className={clsx(style.tag)}>
-                                    <b>{currentTag}</b>
-                                </span>
-                                <MenuItem
-                                    title={item.title}
-                                    path={item.path}
-                                    icon={item.icon}
-                                />
-                            </Fragment>
-                        );
-                    } else if (!item.tag) {
-                        // Nếu không có tag, hiển thị mục mặc định
-                        return (
+                <Fragment>
+                    {user.RoleModel.id === 1 && (
+                        <MenuItem
+                            title="Tổng quan"
+                            path={config.routes.dashboard.index}
+                            icon={<FaChartBar />}
+                        />
+                    )}
+                    <span className={clsx(style.tag)}>
+                        <b>Môn học</b>
+                    </span>
+                    <MenuItem
+                        title="Lớp học phần"
+                        path={config.routes.class.index}
+                        icon={<BiDetail />}
+                        tag="Học phần"
+                    />
+                    {user.RoleModel.id !== 2 && (
+                        <MenuItem
+                            title="Môn học"
+                            path={config.routes.subject.index}
+                            icon={<FaBook />}
+                            tag="Học phần"
+                        />
+                    )}
+                    <span className={clsx(style.tag)}>
+                        <b>Kiểm tra</b>
+                    </span>
+                    {user.RoleModel.id !== 2 && (
+                        <MenuItem
+                            title="Câu hỏi"
+                            path={config.routes.question.index}
+                            icon={<FaCircleQuestion />}
+                            tag="Kiểm tra"
+                        />
+                    )}
+                    <MenuItem
+                        title="Đề kiểm tra"
+                        path={config.routes.test.index}
+                        icon={<FaRegFileLines />}
+                        tag="Kiểm tra"
+                    />
+                    {user.RoleModel.id === 1 && (
+                        <>
+                            <span className={clsx(style.tag)}>
+                                <b>Quản trị</b>
+                            </span>
                             <MenuItem
-                                key={index}
-                                title={item.title}
-                                path={item.path}
-                                icon={item.icon}
+                                title="Phân công"
+                                path={config.routes.assignment.index}
+                                icon={<FaPersonHarassing />}
+                                tag="Quản trị"
                             />
-                        );
-                    } else {
-                        return (
                             <MenuItem
-                                key={index}
-                                title={item.title}
-                                path={item.path}
-                                icon={item.icon}
+                                title="Người dùng"
+                                path={config.routes.user.index}
+                                icon={<FaUserGroup />}
+                                tag="Quản trị"
                             />
-                        );
-                    }
-                })}
+                        </>
+                    )}
+                </Fragment>
             </Menu>
             {/* /Menu */}
         </div>

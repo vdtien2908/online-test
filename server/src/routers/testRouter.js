@@ -9,5 +9,6 @@ router.post('/', TestController.store);
 router.get('/:id', TestController.show);
 router.put('/:id', TestController.update);
 router.delete('/:id', TestController.delete);
+router.post('/submit/:id', TestController.submit);
 
 export default router;

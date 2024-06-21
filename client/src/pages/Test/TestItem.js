@@ -16,7 +16,7 @@ import Button from '~/components/Button';
 // Router
 // import routes from '~/configs/routes';
 
-function TestItem({ data, classList, onclickDelete, onClickShow }) {
+function TestItem({ data, classList, onclickDelete, onClickShow, user }) {
     const items = [
         {
             label: 'Delete',
@@ -60,6 +60,10 @@ function TestItem({ data, classList, onclickDelete, onClickShow }) {
         return time;
     };
 
+    const result = data.ResultModels;
+
+    var resultUser = result.find((obj) => obj.userId === user.id);
+
     return (
         <>
             <div
@@ -100,22 +104,32 @@ function TestItem({ data, classList, onclickDelete, onClickShow }) {
                     <p>Thời gian đóng: {endTime}</p>
                 </div>
                 <div className={clsx(style.btn_test_start)}>
+                    {resultUser && user.RoleModel.id === 2 && (
+                        <div className={clsx(style.submitTest)}>
+                            Đã làm bài!
+                        </div>
+                    )}
+
                     {currentTime > formatTime(startTime) &&
-                        currentTime < formatTime(endTime) && (
+                        currentTime < formatTime(endTime) &&
+                        !resultUser &&
+                        user.RoleModel.id === 2 && (
                             <Button primary to={`/take-a-test/${data.id}`}>
                                 Bắt đầu làm bài
                             </Button>
                         )}
                 </div>
-                <div className={clsx(style.test_action)}>
-                    <SpeedDial
-                        model={items}
-                        radius={80}
-                        type="quarter-circle"
-                        direction="down-left"
-                        style={{ right: '20px', top: '25%' }}
-                    />
-                </div>
+                {(user.RoleModel.id === 1 || user.RoleModel.id === 3) && (
+                    <div className={clsx(style.test_action)}>
+                        <SpeedDial
+                            model={items}
+                            radius={80}
+                            type="quarter-circle"
+                            direction="down-left"
+                            style={{ right: '20px', top: '25%' }}
+                        />
+                    </div>
+                )}
             </div>
         </>
     );

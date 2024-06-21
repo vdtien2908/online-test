@@ -91,6 +91,9 @@ function Test() {
     const [numberOfDifficultQuestion, setNumberOfDifficultQuestion] =
         useState(undefined);
 
+    // User
+    const [user, setUser] = useState({});
+
     const init = async () => {
         try {
             setLoading(true);
@@ -101,6 +104,8 @@ function Test() {
                     typeTest: selectedTypeTest.code,
                 },
             });
+            const reqUser = await axios.get(`${baseUrl}/api/auth/current-user`);
+            setUser(reqUser.data.data);
             setLoading(false);
             setTests(req.data.data);
         } catch (error) {
@@ -354,6 +359,7 @@ function Test() {
 
                                 return (
                                     <TestItem
+                                        user={user}
                                         onClickShow={onClickShow}
                                         onclickDelete={onclickDelete}
                                         key={index}

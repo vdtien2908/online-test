@@ -20,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     ResultModel.init(
         {
             testScore: DataTypes.INTEGER,
-            examTime: DataTypes.DATE,
-            testTime: DataTypes.TIME,
+            examTime: DataTypes.INTEGER,
+            testTime: DataTypes.DATE,
             numberOfCorrectAnswer: DataTypes.INTEGER,
             numberOfTabSwitch: DataTypes.INTEGER,
             testId: DataTypes.INTEGER,

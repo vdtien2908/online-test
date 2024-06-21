@@ -8,7 +8,6 @@ import { clsx } from 'clsx';
 
 function DefaultLayout({ children }) {
     const [isActiveSidebar, setIsActiveSidebar] = useState(false);
-
     const handleOpenSidebar = () => {
         setIsActiveSidebar(!isActiveSidebar);
     };
