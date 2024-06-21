@@ -2,12 +2,17 @@ import clsx from 'clsx';
 
 import style from './Class.module.scss';
 
+import { useState } from 'react';
+
 import Menu from '~/components/Menu';
 import Tooltip from '~/components/Tooltip';
 
 import { FaGear, FaArrowRight, FaPencil, FaRegTrashCan } from 'react-icons/fa6';
 
 function ClassItem({ item, onClickEdit, onClickDelete, onClickStudents }) {
+    const [user, setUser] = useState(() => {
+        return JSON.parse(localStorage.getItem('user'));
+    });
     const MENU_ITEMS = [
         {
             icon: <FaPencil />,
@@ -24,11 +29,13 @@ function ClassItem({ item, onClickEdit, onClickDelete, onClickStudents }) {
         <div className={style.classItem}>
             <div className={clsx(style.classItem_top)}>
                 <p className={style.classItem_title}>{item.className}</p>
-                <Menu items={MENU_ITEMS} placement="bottom-end" offset>
-                    <div className={style.classItem_action}>
-                        <FaGear />
-                    </div>
-                </Menu>
+                {user.RoleModel.id !== 2 && (
+                    <Menu items={MENU_ITEMS} placement="bottom-end" offset>
+                        <div className={style.classItem_action}>
+                            <FaGear />
+                        </div>
+                    </Menu>
+                )}
             </div>
             <div className={clsx(style.classItem_body)}>
                 <p>
@@ -47,13 +54,15 @@ function ClassItem({ item, onClickEdit, onClickDelete, onClickStudents }) {
                 <p className={clsx(style.code)}>
                     <b>Mã mời:</b> {item.invitationCode}
                 </p>
-                <div
-                    className={clsx(style.list_member)}
-                    onClick={() => onClickStudents(item.id)}
-                >
-                    <p>Danh sách sinh viên</p>
-                    <FaArrowRight />
-                </div>
+                {user.RoleModel.id !== 2 && (
+                    <div
+                        className={clsx(style.list_member)}
+                        onClick={() => onClickStudents(item.id)}
+                    >
+                        <p>Danh sách sinh viên</p>
+                        <FaArrowRight />
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -10,11 +10,33 @@ import {
     TestDetailModel,
     ResultDetailModel,
     ResultModel,
+    ClassDetailModel,
+    AssignmentModel,
+    SubjectModel,
 } from '../../models';
 
 class TestController {
     // [GET] /api/tests
     index = asyncHandle(async (req, res) => {
+        const userId = req.user.id;
+        const classDetail = await ClassDetailModel.findAll({
+            where: {
+                userId,
+            },
+        });
+
+        const assignments = await AssignmentModel.findAll({
+            where: {
+                userId,
+            },
+            include: [{ model: SubjectModel }],
+        });
+
+        const subjectNames = assignments.map(
+            (item) => item.SubjectModel.subjectName
+        );
+
+        const classIds = classDetail.map((item) => item.classId);
         const { search, subjectName, typeTest } = req.query;
         const whereConditions = {
             status: 0,
@@ -51,6 +73,18 @@ class TestController {
             };
         }
 
+        if (req.user.role === 2) {
+            whereConditions['$AssignExamQuestionModels.classId$'] = {
+                [Op.in]: classIds,
+            };
+        }
+
+        if (req.user.role === 3) {
+            whereConditions.subjectName = {
+                [Op.in]: subjectNames,
+            };
+        }
+
         const tests = await TestModel.findAll({
             where: whereConditions,
             include: [
@@ -67,6 +101,7 @@ class TestController {
         res.status(200).json({
             success: true,
             data: tests,
+            subjectNames,
         });
     });
 
