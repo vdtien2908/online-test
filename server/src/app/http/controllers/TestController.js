@@ -13,6 +13,7 @@ import {
     ClassDetailModel,
     AssignmentModel,
     SubjectModel,
+    UserModel,
 } from '../../models';
 
 class TestController {
@@ -73,6 +74,8 @@ class TestController {
             };
         }
 
+        const whereConditionsResultModel = {};
+
         if (req.user.role === 2) {
             whereConditions['$AssignExamQuestionModels.classId$'] = {
                 [Op.in]: classIds,
@@ -113,6 +116,21 @@ class TestController {
             where: {
                 id,
             },
+            include: [
+                {
+                    model: ResultModel,
+                    include: [
+                        {
+                            model: UserModel,
+                            attributes: ['id', 'code', 'fullName'],
+                        },
+                    ],
+                },
+                {
+                    model: AssignExamQuestionModel,
+                    include: [{ model: ClassModel }],
+                },
+            ],
         });
 
         const testDetails = await TestDetailModel.findAll({

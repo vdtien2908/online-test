@@ -16,6 +16,8 @@ import { Calendar } from 'primereact/calendar';
 import { MultiSelect } from 'primereact/multiselect';
 import { RadioButton } from 'primereact/radiobutton';
 import { Tag } from 'primereact/tag';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 
 // Component
 import TopPage from '~/components/TopPage';
@@ -25,12 +27,13 @@ import Search from '~/components/Search';
 import TestItem from './TestItem';
 import Loading from '~/components/Loading';
 import Button from '~/components/Button';
+import Tooltip from '~/components/Tooltip';
 
 // Hooks
 import { useDebounce, useAxiosWithAuth } from '~/hooks';
 
 // React icon
-import { FaFilterCircleXmark } from 'react-icons/fa6';
+import { FaFilterCircleXmark, FaRegTrashCan } from 'react-icons/fa6';
 
 const baseUrl = process.env.REACT_APP_BASE_URL;
 
@@ -44,6 +47,8 @@ function Test() {
     const [visibleCreate, setVisibleCreate] = useState(false);
     const [visibleDelete, setVisibleDelete] = useState(false);
     const [visibleShow, setVisibleShow] = useState(false);
+    const [visibleSeeTestScore, setVisibleSeeTestScore] = useState(false);
+    const [visibleAssign, setVisibleAssign] = useState(false);
 
     // Sort
     const [selectedSubject, setSelectedSubject] = useState({});
@@ -65,6 +70,8 @@ function Test() {
         { title: 'không', code: 0 },
         { title: 'Có', code: 1 },
     ];
+    const [results, setResults] = useState([]);
+    const [assigns, setAssigns] = useState([]);
 
     // Number limit questions
     const [easyNumber, setEastNumber] = useState(0);
@@ -117,9 +124,7 @@ function Test() {
         (async () => {
             try {
                 const req = await axios.get(`${baseUrl}/api/subjects`);
-                const reqClass = await axios.get(`${baseUrl}/api/class`);
                 setSubjects(req.data.data);
-                setModules(reqClass.data.data);
             } catch (error) {
                 toastMessage('error', 'Lỗi', error.response.data.message);
             }
@@ -252,6 +257,10 @@ function Test() {
                         lever: 3,
                     },
                 });
+                const reqClass = await axios.get(`${baseUrl}/api/class`, {
+                    params: { subjectId: e.value.id },
+                });
+                setModules(reqClass.data.data);
                 setEastNumber(easy.data.data.length);
                 setBasicNumber(basic.data.data.length);
                 setDifficultNumber(difficult.data.data.length);
@@ -277,6 +286,27 @@ function Test() {
         }
     };
 
+    const seeTestScore = async (id) => {
+        setVisibleSeeTestScore(true);
+        try {
+            const req = await axios.get(`${baseUrl}/api/tests/${id}`);
+            setResults(req.data.data.tests[0].ResultModels);
+        } catch (error) {
+            toastMessage('error', 'Lỗi', error.response.data.message);
+        }
+    };
+
+    const onclickAssign = async (id) => {
+        setVisibleAssign(true);
+        try {
+            const req = await axios.get(`${baseUrl}/api/tests/${id}`);
+            setAssigns(req.data.data.tests[0].AssignExamQuestionModels);
+            console.log(req.data.data.tests[0].AssignExamQuestionModels);
+        } catch (error) {
+            toastMessage('error', 'Lỗi', error.response.data.message);
+        }
+    };
+
     const handleClearSort = () => {
         setSelectedSubject({});
         setSearchValue('');
@@ -284,6 +314,38 @@ function Test() {
     };
 
     const optionAnswers = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+    const indexBodyTemplate = (data, props) => {
+        return props.rowIndex + 1;
+    };
+
+    const idBodyTemplate = (data) => {
+        return data.UserModel.code;
+    };
+
+    const fullNameBodyTemplate = (data) => {
+        return data.UserModel.fullName;
+    };
+
+    const classNameBodyTemple = (data) => {
+        return data.ClassModel.className;
+    };
+
+    const actionBodyTemplate = (data) => {
+        return (
+            <div className="table_action">
+                <Tooltip content="Xoá">
+                    <span>
+                        <Button
+                            className="table_icon"
+                            outline
+                            trash
+                            leftIcon={<FaRegTrashCan />}
+                        />
+                    </span>
+                </Tooltip>
+            </div>
+        );
+    };
 
     return (
         <>
@@ -360,6 +422,8 @@ function Test() {
                                 return (
                                     <TestItem
                                         user={user}
+                                        onclickAssign={onclickAssign}
+                                        seeTestScore={seeTestScore}
                                         onClickShow={onClickShow}
                                         onclickDelete={onclickDelete}
                                         key={index}
@@ -682,6 +746,121 @@ function Test() {
                 </form>
             </Dialog>
             {/* /Dialog show */}
+
+            {/* Dialog see score test */}
+            <Dialog
+                header={headerDialog('Danh sách bài thi')}
+                visible={visibleSeeTestScore}
+                style={{ width: '900px' }}
+                onHide={() => {
+                    if (!visibleSeeTestScore) return;
+                    setVisibleSeeTestScore(false);
+                }}
+                draggable={false}
+            >
+                <DataTable
+                    value={results}
+                    showGridlines
+                    stripedRows
+                    paginator
+                    rowsPerPageOptions={[5, 10, 15, 20]}
+                    paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                    rows={10}
+                    currentPageReportTemplate="Trang {currentPage} / {totalPages}"
+                    emptyMessage="Không có dữ liệu"
+                >
+                    <Column
+                        body={indexBodyTemplate}
+                        header="#"
+                        bodyClassName="text-center"
+                    />
+                    <Column
+                        body={idBodyTemplate}
+                        field="code"
+                        header="Mã sinh viên"
+                        bodyClassName="text-center"
+                        sortable
+                    ></Column>
+                    <Column
+                        body={fullNameBodyTemplate}
+                        field="fullName"
+                        header="Họ tên sinh viên"
+                        bodyClassName="text-center"
+                        sortable
+                    ></Column>
+                    <Column
+                        field="testScore"
+                        header="Điểm thi"
+                        bodyClassName="text-center"
+                        sortable
+                    ></Column>
+                </DataTable>
+            </Dialog>
+            {/* /Dialog see score test */}
+
+            {/* Dialog  assign */}
+            <Dialog
+                header={headerDialog('Giao đề thi')}
+                visible={visibleAssign}
+                style={{ width: '900px' }}
+                onHide={() => {
+                    if (!visibleAssign) return;
+                    setVisibleAssign(false);
+                }}
+                draggable={false}
+            >
+                <div style={{ padding: '0 10px' }}>
+                    <div className={clsx(style.add_assign)}>
+                        <div className={clsx(style.selected)}>
+                            <FloatLabel>
+                                <MultiSelect
+                                    optionLabel="fullName"
+                                    placeholder="Chọn lớp học"
+                                    maxSelectedLabels={4}
+                                    className="input"
+                                    display="chip"
+                                />
+                                <label htmlFor="className">Lớp học</label>
+                            </FloatLabel>
+                        </div>
+                        <div className={clsx(style.button)}>
+                            <Button primary>Giao đề</Button>
+                        </div>
+                    </div>
+                    <DataTable
+                        value={assigns}
+                        showGridlines
+                        stripedRows
+                        paginator
+                        rowsPerPageOptions={[5, 10, 15, 20]}
+                        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                        rows={10}
+                        currentPageReportTemplate="Trang {currentPage} / {totalPages}"
+                        emptyMessage="Không có dữ liệu"
+                    >
+                        <Column
+                            body={indexBodyTemplate}
+                            header="#"
+                            bodyClassName="text-center"
+                        />
+                        <Column
+                            body={classNameBodyTemple}
+                            field="className"
+                            header="Tên lớp"
+                            bodyClassName="text-center"
+                            sortable
+                        ></Column>
+                        <Column
+                            body={actionBodyTemplate}
+                            field="code"
+                            header="Xoá"
+                            bodyClassName="text-center"
+                            sortable
+                        ></Column>
+                    </DataTable>
+                </div>
+            </Dialog>
+            {/* /Dialog  assign */}
 
             {/* Dialog delete */}
             <Dialog

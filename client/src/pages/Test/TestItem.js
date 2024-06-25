@@ -4,6 +4,7 @@ import {
     FaCodeBranch,
     FaClock,
     FaHourglassStart,
+    FaFileCode,
 } from 'react-icons/fa6';
 import { SpeedDial } from 'primereact/speeddial';
 
@@ -16,13 +17,31 @@ import Button from '~/components/Button';
 // Router
 // import routes from '~/configs/routes';
 
-function TestItem({ data, classList, onclickDelete, onClickShow, user }) {
+function TestItem({
+    data,
+    classList,
+    onclickDelete,
+    onClickShow,
+    seeTestScore,
+    onclickAssign,
+    user,
+}) {
     const items = [
         {
             label: 'Delete',
             icon: 'pi pi-trash',
             command: () => onclickDelete(data.id),
         },
+        {
+            label: 'See test code',
+            icon: <FaFileCode />,
+            command: () => seeTestScore(data.id),
+        },
+        // {
+        //     label: 'Assign',
+        //     icon: <FaCodeBranch />,
+        //     command: () => onclickAssign(data.id),
+        // },
         {
             label: 'Show',
             icon: 'pi pi-external-link',
@@ -106,7 +125,11 @@ function TestItem({ data, classList, onclickDelete, onClickShow, user }) {
                 <div className={clsx(style.btn_test_start)}>
                     {resultUser && user.RoleModel.id === 2 && (
                         <div className={clsx(style.submitTest)}>
-                            Đã làm bài!
+                            Đã làm bài! - {resultUser.testScore} điểm - đúng{' '}
+                            {resultUser.numberOfCorrectAnswer} /{' '}
+                            {data.numberOfEasyQuestion +
+                                data.numberOfBasicQuestion +
+                                data.numberOfDifficultQuestion}
                         </div>
                     )}
 
@@ -123,7 +146,7 @@ function TestItem({ data, classList, onclickDelete, onClickShow, user }) {
                     <div className={clsx(style.test_action)}>
                         <SpeedDial
                             model={items}
-                            radius={80}
+                            radius={100}
                             type="quarter-circle"
                             direction="down-left"
                             style={{ right: '20px', top: '25%' }}
